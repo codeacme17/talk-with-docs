@@ -103,6 +103,7 @@ const reciveMessage = async () => {
   const res = await fetchRobotMessage()
   chatList[chatList.length - 1].content = res
   chatList[chatList.length - 1].loading = false
+  scrollToBottom()
 }
 
 // DUMMY
