@@ -1,11 +1,13 @@
 <template>
   <div v-if="!!chatStore.web">
-    now, you chat with {{ chatStore.web }}
+    now, you are chatting with <strong>{{ chatStore.web }}</strong>
   </div>
-  <div v-if="chatStore.files.length">now, you chat with files</div>
+  <div v-if="chatStore.files.length" class="">
+    now, you are chatting with <strong>file</strong>
+  </div>
 
   <t-card
-    class="border-none py-3 overflow-y-scroll"
+    class="border-none my-3 py-3 overflow-y-scroll"
     style="max-height: calc(100vh - 280px)"
     ref="chatRef"
   >
@@ -41,7 +43,7 @@
     </div>
   </t-card>
 
-  <div class="mt-3 flex items-baseline bottom-0">
+  <div class="flex items-baseline bottom-0">
     <t-textarea
       placeholder="press 'ctrl' + 'enter' to send"
       autosize

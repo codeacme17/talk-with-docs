@@ -16,10 +16,4 @@ export const useChatStore = defineStore('chat', {
     getWeb: (state) => state.web,
     getFiles: (state) => state.files,
   },
-
-  actions: {
-    setWeb(web: string) {
-      this.web = web
-    },
-  },
 })

@@ -4,7 +4,7 @@
       <t-form-item>
         <t-select
           v-model="formData.selection"
-          placeholder=""
+          placeholder="choose a type"
           @change="handleChange"
         >
           <t-option
@@ -88,10 +88,8 @@ const handleChange = () => {
 
 const loading = ref(false)
 const handleChoose = () => {
-  if (formData.web) chatStore.setWeb(formData.web)
+  if (formData.web) chatStore.web = formData.web
   if (!!formData.files.length) chatStore.files = formData.files
   loading.value = true
-
-  console.log(chatStore.web)
 }
 </script>
