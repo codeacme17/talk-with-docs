@@ -1,44 +1,57 @@
 <template>
-  <t-card class="border-none py-7">
-    <template #header> Chose Chat Type </template>
-
-    <t-form class="" labelWidth="0">
+  <t-card class="border-none" :loading="loading">
+    <t-form class="my-7" labelWidth="0">
       <t-form-item>
-        <t-select v-model="formData.selection" placeholder="">
+        <t-select
+          v-model="formData.selection"
+          placeholder=""
+          @change="handleChange"
+        >
           <t-option
             v-for="item in options"
             :label="item.label"
             :value="item.value"
           />
         </t-select>
+
+        <t-button
+          theme="default"
+          class="ml-3 px-7"
+          :disabled="!formData.files.length && !formData.web"
+          @click="handleChoose"
+        >
+          FEED TO LANGCHAIN
+        </t-button>
       </t-form-item>
 
       <t-input-adornment
-        prepend="http://"
+        :prepend="protocolSelect"
         v-show="formData.selection === 'web'"
       >
-        <t-input placeholder="" />
+        <t-input placeholder="" v-model.trim="formData.web" />
       </t-input-adornment>
 
       <t-upload
-        v-model="formData.files"
+        action="https://service-bv448zsw-1257786608.gz.apigw.tencentcs.com/api/upload-demo"
         v-show="formData.selection === 'files'"
-        placeholder=""
-        theme="file-flow"
+        v-model="formData.files"
         multiple
-        :disabled="disabled"
-        :auto-upload="autoUpload"
-        :max="10"
-        :allow-upload-duplicate-file="allowUploadDuplicateFile"
-        :is-batch-upload="isBatchUpload"
-        :upload-all-files-in-one-request="uploadAllFilesInOneRequest"
-      />
+        :autoUpload="false"
+        allowUploadDuplicateFile
+      >
+        <t-button theme="default">
+          CHOOSE FILE (allow multiple)
+        </t-button>
+      </t-upload>
     </t-form>
   </t-card>
 </template>
 
-<script setup lang="ts">
+<script setup lang="tsx">
 import { reactive, ref } from 'vue'
+import { useChatStore } from '@/stores'
+
+const chatStore = useChatStore()
 
 const options = [
   {
@@ -51,15 +64,34 @@ const options = [
   },
 ]
 
+const protocolSelect = ref(() => (
+  <t-select
+    autoWidth
+    options={['https://', 'http://'].map((value) => ({
+      label: value,
+      value,
+    }))}
+    defaultValue="https://"
+  />
+))
+
 const formData = reactive({
   selection: '',
   web: '',
-  files: '',
+  files: [],
 })
 
-const disabled = ref(false)
-const autoUpload = ref(false)
-const allowUploadDuplicateFile = ref(false)
-const isBatchUpload = ref(false)
-const uploadAllFilesInOneRequest = ref(false)
+const handleChange = () => {
+  formData.web = ''
+  formData.files = []
+}
+
+const loading = ref(false)
+const handleChoose = () => {
+  if (formData.web) chatStore.setWeb(formData.web)
+  if (!!formData.files.length) chatStore.files = formData.files
+  loading.value = true
+
+  console.log(chatStore.web)
+}
 </script>

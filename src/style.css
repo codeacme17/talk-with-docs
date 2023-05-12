@@ -13,3 +13,21 @@ body {
   --td-font-family: "JetBrains Mono", "幼圆" !important;
   --td-brand-color: white !important;
 }
+
+::-webkit-scrollbar {
+  width: 5px;    
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: var(--td-gray-color-5);
+}
+::-webkit-scrollbar-track {
+  border-radius: 0;
+  background: var(--td-gray-color-5);
+}
+html[theme-mode="dark"] ::-webkit-scrollbar-thumb{
+  background: var(--td-gray-color-10);
+} 
+html[theme-mode="dark"] ::-webkit-scrollbar-track{
+  background: transparent !important;
+} 

@@ -1,6 +1,17 @@
 <template>
-  <t-card class="border-none pb-5 pt-3">
-    <div class="mb-10">
+  <div v-if="!!chatStore.web">
+    now, you chat with {{ chatStore.web }}
+  </div>
+  <div v-if="chatStore.files.length">now, you chat with files</div>
+
+  <t-card
+    class="border-none py-3 overflow-y-scroll"
+    style="max-height: calc(100vh - 280px)"
+    ref="chatRef"
+  >
+    <div v-show="!chatList.length">Send message to start 👇</div>
+
+    <div class="">
       <div v-for="item in chatList" class="mb-4">
         <div
           v-show="item.role === 'robot'"
@@ -28,55 +39,45 @@
         </div>
       </div>
     </div>
-
-    <div class="mt-3 flex items-baseline">
-      <t-textarea
-        placeholder="press 'ctrl' + 'enter' to send"
-        autosize
-        class="mr-3"
-        v-model.trim="inputValue"
-        @keydown="handleKeydown"
-        @keyup="handleKeyup"
-      />
-
-      <t-button
-        theme="default"
-        size="large"
-        style="height: 35px; width: 100px"
-        @click="sendMessage"
-      >
-        SEND
-      </t-button>
-    </div>
   </t-card>
+
+  <div class="mt-3 flex items-baseline bottom-0">
+    <t-textarea
+      placeholder="press 'ctrl' + 'enter' to send"
+      autosize
+      class="mr-3"
+      v-model.trim="inputValue"
+      @keydown="handleKeydown"
+      @keyup="handleKeyup"
+    />
+
+    <t-button
+      theme="default"
+      size="large"
+      style="height: 35px; width: 100px"
+      @click="sendMessage"
+      :disabled="!inputValue"
+    >
+      SEND
+    </t-button>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { nextTick, reactive, ref } from 'vue'
 import { nanoid } from 'nanoid'
+import { useChatStore } from '@/stores'
+
+interface chatItem {
+  id: string
+  role: 'user' | 'robot'
+  content: string
+}
+
+const chatStore = useChatStore()
 
 const inputValue = ref('')
-
-const chatList = reactive([
-  {
-    id: nanoid(),
-    role: 'user',
-    content:
-      'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Fugit quam delectus maxime deleniti harum distinctio amet officia ipsum deserunt, ab in et quaerat animi. Sunt, modi. Quae aliquid delectus explicabo.',
-  },
-  {
-    id: nanoid(),
-    role: 'robot',
-    content:
-      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo fugiat explicabo rerum vero non maiores eum ut nobis, unde quaerat repellat cupiditate voluptatibus reprehenderit corrupti tenetur enim. Adipisci, iure doloremque.',
-  },
-  {
-    id: nanoid(),
-    role: 'user',
-    content:
-      'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Fugit quam delectus maxime deleniti harum distinctio amet officia ipsum deserunt, ab in et quaerat animi. Sunt, modi. Quae aliquid delectus explicabo.',
-  },
-])
+const chatList = reactive<chatItem[]>([])
 
 const ctrlTrigger = ref(false)
 
@@ -98,5 +99,18 @@ const sendMessage = () => {
     content: inputValue.value,
   })
   inputValue.value = ''
+  scrollToBottom()
+}
+
+const chatRef = ref<Element | null>(null)
+const scrollToBottom = () => {
+  const currentHeight = chatRef.value!.clientHeight
+
+  nextTick(() => {
+    chatRef.value?.scrollTo({
+      top: currentHeight,
+      behavior: 'smooth',
+    })
+  })
 }
 </script>
