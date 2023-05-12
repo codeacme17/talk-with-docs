@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body {
+  color: rgb(213, 213, 213);
+  background-color: #1e1e1e;
+  font-family: "JetBrains Mono", "幼圆" !important;
+}
+
+:root {
+  --td-font-family: "JetBrains Mono", "幼圆" !important;
+  --td-brand-color: white !important;
+}
