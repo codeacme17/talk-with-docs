@@ -9,22 +9,22 @@
   <t-card
     class="border-none my-3 py-3 overflow-y-scroll"
     style="max-height: calc(100vh - 280px)"
-    ref="chatRef"
+    id="chatContainer"
   >
     <div v-show="!chatList.length">Send message to start 👇</div>
 
     <div class="">
-      <div v-for="item in chatList" class="mb-4">
-        <div
-          v-show="item.role === 'robot'"
-          class="mb-4 flex flex-col"
-        >
+      <div v-for="item in chatList" class="mb-3">
+        <div v-show="item.role === 'robot'" class="flex flex-col">
           <header class="text-blue-500 flex item-center">
             <div class="text-xl">🤖</div>
             <div class="ml-2">ROBOT</div>
           </header>
 
-          <div class="ml-9">{{ item.content }}</div>
+          <div class="ml-9 mr-32 animate-pulse" v-if="item.loading">
+            <div class="h-5 bg-slate-700 rounded col-span-2"></div>
+          </div>
+          <div class="ml-9 mr-32" v-else>{{ item.content }}</div>
         </div>
 
         <div v-show="item.role === 'user'">
@@ -35,7 +35,7 @@
             <div class="mr-2">YOU</div>
           </header>
 
-          <div class="mr-9 text-right">
+          <div class="mr-9 ml-32 text-right">
             {{ item.content }}
           </div>
         </div>
@@ -74,25 +74,12 @@ interface chatItem {
   id: string
   role: 'user' | 'robot'
   content: string
+  loading?: boolean
 }
 
 const chatStore = useChatStore()
-
 const inputValue = ref('')
 const chatList = reactive<chatItem[]>([])
-
-const ctrlTrigger = ref(false)
-
-const handleKeydown = (value: string, { e }: any) => {
-  if (e.code === 'ControlLeft') ctrlTrigger.value = true
-
-  if (ctrlTrigger.value && e.code === 'Enter') sendMessage()
-}
-
-const handleKeyup = (value: string, { e }: any) => {
-  if (ctrlTrigger.value) ctrlTrigger.value = false
-}
-
 const sendMessage = () => {
   if (!inputValue.value) return
   chatList.push({
@@ -102,17 +89,51 @@ const sendMessage = () => {
   })
   inputValue.value = ''
   scrollToBottom()
+  reciveMessage()
 }
 
-const chatRef = ref<Element | null>(null)
+const reciveMessage = async () => {
+  chatList.push({
+    id: nanoid(),
+    role: 'robot',
+    content: '',
+    loading: true,
+  })
+  const res = await fetchRobotMessage()
+  chatList[chatList.length - 1].content = res
+  chatList[chatList.length - 1].loading = false
+}
+
+// DUMMY
+const fetchRobotMessage = (): Promise<string> => {
+  return new Promise((res) => {
+    setTimeout(() => {
+      res(
+        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae dolores error, pariatur commodi porro omnis nihil sint delectus illo, quam culpa doloribus est praesentium velit dicta consequatur aperiam odio! Voluptates?'
+      )
+    }, 2000)
+  })
+}
+
 const scrollToBottom = () => {
-  const currentHeight = chatRef.value!.clientHeight
+  const el = document.getElementById('chatContainer')
+  const currentHeight = el!.scrollHeight
 
   nextTick(() => {
-    chatRef.value?.scrollTo({
+    el!.scrollTo({
       top: currentHeight,
+      left: 0,
       behavior: 'smooth',
     })
   })
+}
+
+const ctrlTrigger = ref(false)
+const handleKeydown = (value: string, { e }: any) => {
+  if (e.code === 'ControlLeft') ctrlTrigger.value = true
+  if (ctrlTrigger.value && e.code === 'Enter') sendMessage()
+}
+const handleKeyup = (value: string, { e }: any) => {
+  if (ctrlTrigger.value) ctrlTrigger.value = false
 }
 </script>
