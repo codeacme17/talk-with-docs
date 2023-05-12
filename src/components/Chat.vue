@@ -51,6 +51,7 @@
       v-model.trim="inputValue"
       @keydown="handleKeydown"
       @keyup="handleKeyup"
+      autofocus
     />
 
     <t-button

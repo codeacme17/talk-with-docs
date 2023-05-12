@@ -21,7 +21,7 @@
 
     <Selection v-if="!chatStore.web && !chatStore.files.length" />
 
-    <Chat class="my-5" />
+    <Chat class="my-5" v-else />
   </section>
 </template>
 
