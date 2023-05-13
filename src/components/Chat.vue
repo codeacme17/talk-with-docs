@@ -28,9 +28,7 @@
         </div>
 
         <div v-show="item.role === 'user'">
-          <header
-            class="text-green-500 flex item-center flex-row-reverse"
-          >
+          <header class="text-green-500 flex item-center flex-row-reverse">
             <div class="text-xl">🧑</div>
             <div class="mr-2">YOU</div>
           </header>
@@ -70,6 +68,7 @@
 import { nextTick, reactive, ref } from 'vue'
 import { nanoid } from 'nanoid'
 import { useChatStore } from '@/stores'
+import { HumanChat } from '@/apis'
 
 interface chatItem {
   id: string
@@ -107,14 +106,9 @@ const reciveMessage = async () => {
 }
 
 // DUMMY
-const fetchRobotMessage = (): Promise<string> => {
-  return new Promise((res) => {
-    setTimeout(() => {
-      res(
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae dolores error, pariatur commodi porro omnis nihil sint delectus illo, quam culpa doloribus est praesentium velit dicta consequatur aperiam odio! Voluptates?'
-      )
-    }, 2000)
-  })
+const fetchRobotMessage = async () => {
+  const res = await HumanChat(inputValue.value)
+  return res
 }
 
 const scrollToBottom = () => {

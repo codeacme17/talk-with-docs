@@ -17,10 +17,14 @@
         <t-button
           theme="default"
           class="ml-3 px-7"
-          :disabled="!formData.files.length && !formData.web"
+          :disabled="
+            !formData.files.length &&
+            !formData.web &&
+            formData.selection !== 'chat'
+          "
           @click="handleChoose"
         >
-          FEED TO LANGCHAIN
+          CONFIRM
         </t-button>
       </t-form-item>
 
@@ -39,9 +43,7 @@
         :autoUpload="false"
         allowUploadDuplicateFile
       >
-        <t-button theme="default">
-          CHOOSE FILE (allow multiple)
-        </t-button>
+        <t-button theme="default"> CHOOSE FILE (allow multiple) </t-button>
       </t-upload>
     </t-form>
   </t-card>
@@ -54,6 +56,10 @@ import { useChatStore } from '@/stores'
 const chatStore = useChatStore()
 
 const options = [
+  {
+    label: 'just chat',
+    value: 'chat',
+  },
   {
     label: 'web',
     value: 'web',

@@ -19,7 +19,13 @@
       </div>
     </header>
 
-    <Selection v-if="!chatStore.web && !chatStore.files.length" />
+    <Selection
+      v-if="
+        !chatStore.web &&
+        !chatStore.files.length &&
+        chatStore.selection !== 'chat'
+      "
+    />
 
     <Chat class="my-5" v-else />
   </section>
@@ -29,6 +35,7 @@
 import { useChatStore } from '@/stores'
 
 const chatStore = useChatStore()
+console.log(chatStore.selection)
 
 document.documentElement.setAttribute('theme-mode', 'dark')
 </script>

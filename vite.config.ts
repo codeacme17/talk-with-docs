@@ -5,6 +5,11 @@ import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { TDesignResolver } from 'unplugin-vue-components/resolvers'
 import vueJsx from '@vitejs/plugin-vue-jsx'
+import wasm from 'vite-plugin-wasm'
+import topLevelAwait from 'vite-plugin-top-level-await'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 export default defineConfig({
   plugins: [
@@ -24,7 +29,12 @@ export default defineConfig({
         }),
       ],
     }),
+    wasm(),
+    topLevelAwait(),
   ],
+  define: {
+    'process.env': process.env,
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),
