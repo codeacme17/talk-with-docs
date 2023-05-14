@@ -109,18 +109,19 @@ const reciveMessage = async () => {
     loading: true,
   })
   const res = await fetchRobotMessage()
-  chatList[chatList.length - 1].content = res as string
+  chatList[chatList.length - 1].content = res
   chatList[chatList.length - 1].loading = false
   scrollToBottom()
 }
 
 const fetchRobotMessage = async () => {
-  let res
+  let res: any
 
   if (chatStore.selection === 'chat') {
-    res = await CHAT_API.chat({
+    let temp = (await CHAT_API.chat({
       prompt: inputValue.value,
-    })
+    })) as any
+    res = temp.content
   }
 
   if (chatStore.selection === 'web') {

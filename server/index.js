@@ -26,7 +26,7 @@ app.post('/api/chat', async (req, res) => {
   const response = await chat.call([new HumanChatMessage(prompt)])
 
   res.status(200).json({
-    test: response.text,
+    content: response.text,
   })
 })
 
