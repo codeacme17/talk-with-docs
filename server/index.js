@@ -9,6 +9,7 @@ const port = 1818
 
 app.use(bodyParser.json())
 
+// normal chat model router
 app.post('/api/chat', async (req, res) => {
   const data = await chatModel(req.body)
 
@@ -17,8 +18,9 @@ app.post('/api/chat', async (req, res) => {
   })
 })
 
-app.post('/api/chooseWeb', async (req, res) => {
-  const data = await webModel(req.body)
+// init web, when select a web
+app.post('/api/initWeb', async (req, res) => {
+  const data = await webModel.initWeb(req.body)
 
   res.status(200).json({
     data: data,

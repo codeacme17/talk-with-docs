@@ -10,7 +10,7 @@ export const webLoader = async (url) => {
     },
   })
 
-  const docs = await loader.load()
+  const rawDocs = await loader.load()
 
-  return docs
+  return rawDocs
 }

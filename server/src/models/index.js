@@ -1,2 +1,2 @@
-export * from './modules/chat.js'
-export * from './modules/web.js'
+export * from './modules/chat-model.js'
+export * as webModel from './modules/web-model.js'
