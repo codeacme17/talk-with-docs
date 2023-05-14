@@ -121,7 +121,7 @@ const fetchRobotMessage = async () => {
     let temp = (await CHAT_API.chat({
       prompt: inputValue.value,
     })) as any
-    res = temp.content
+    res = temp.data.text
   }
 
   if (chatStore.selection === 'web') {

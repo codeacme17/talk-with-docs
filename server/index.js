@@ -1,46 +1,27 @@
 import express from 'express'
 import bodyParser from 'body-parser'
-import { ChatOpenAI } from 'langchain/chat_models/openai'
-import { HumanChatMessage } from 'langchain/schema'
-import { SocksProxyAgent } from 'socks-proxy-agent'
+import webModel from './src/models/web.js'
+import chatModel from './src/models/chat.js'
 import 'dotenv/config'
 
-import { webLoader } from './src/loaders/index.js'
-
-const agent = new SocksProxyAgent('socks5://127.0.0.1:1086')
 const app = express()
 const port = 1818
-const options = {
-  httpsAgent: agent,
-  httpAgent: agent,
-}
 
 app.use(bodyParser.json())
 
 app.post('/api/chat', async (req, res) => {
-  const { prompt } = req.body
-  const chat = new ChatOpenAI(
-    { temperature: 0 },
-    {
-      baseOptions: options,
-    }
-  )
-  const response = await chat.call([new HumanChatMessage(prompt)])
+  const data = await chatModel(req.body)
 
   res.status(200).json({
-    content: response.text,
+    data: data,
   })
 })
 
 app.post('/api/chooseWeb', async (req, res) => {
-  const { url } = req.body
-
-  const data = await webLoader(url)
-
-  console.log(data)
+  const data = await webModel(req.body)
 
   res.status(200).json({
-    content: data,
+    data: data,
   })
 })
 
