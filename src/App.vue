@@ -1,6 +1,6 @@
 <template>
   <section
-    class="w-[60%] min-w-[600px] mx-auto pt-7 flex flex-col min-h-screen"
+    class="w-[70%] min-w-[800px] mx-auto pt-7 flex flex-col min-h-screen"
   >
     <header class="flex items-center mb-7">
       <logo />
@@ -35,7 +35,6 @@
 import { useChatStore } from '@/stores'
 
 const chatStore = useChatStore()
-console.log(chatStore.selection)
 
 document.documentElement.setAttribute('theme-mode', 'dark')
 </script>

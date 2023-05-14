@@ -68,13 +68,22 @@
 import { nextTick, reactive, ref } from 'vue'
 import { nanoid } from 'nanoid'
 import { useChatStore } from '@/stores'
-import { HumanChat } from '@/apis'
+import { CHAT_API, WEB_API } from '@/apis'
 
 interface chatItem {
   id: string
   role: 'user' | 'robot'
   content: string
   loading?: boolean
+}
+
+const ctrlTrigger = ref(false)
+const handleKeydown = (value: string, { e }: any) => {
+  if (e.code === 'ControlLeft') ctrlTrigger.value = true
+  if (ctrlTrigger.value && e.code === 'Enter') sendMessage()
+}
+const handleKeyup = (value: string, { e }: any) => {
+  if (ctrlTrigger.value) ctrlTrigger.value = false
 }
 
 const chatStore = useChatStore()
@@ -87,9 +96,9 @@ const sendMessage = () => {
     role: 'user',
     content: inputValue.value,
   })
-  inputValue.value = ''
   scrollToBottom()
   reciveMessage()
+  inputValue.value = ''
 }
 
 const reciveMessage = async () => {
@@ -100,14 +109,26 @@ const reciveMessage = async () => {
     loading: true,
   })
   const res = await fetchRobotMessage()
-  chatList[chatList.length - 1].content = res
+  chatList[chatList.length - 1].content = res as string
   chatList[chatList.length - 1].loading = false
   scrollToBottom()
 }
 
-// DUMMY
 const fetchRobotMessage = async () => {
-  const res = await HumanChat(inputValue.value)
+  let res
+
+  if (chatStore.selection === 'chat') {
+    res = await CHAT_API.chat({
+      prompt: inputValue.value,
+    })
+  }
+
+  if (chatStore.selection === 'web') {
+    const data: string[] = chatStore.getDocs?.map((item) => item.pageContent)!
+    res = await WEB_API.web(data)
+  }
+
+  console.log(res)
   return res
 }
 
@@ -122,14 +143,5 @@ const scrollToBottom = () => {
       behavior: 'smooth',
     })
   })
-}
-
-const ctrlTrigger = ref(false)
-const handleKeydown = (value: string, { e }: any) => {
-  if (e.code === 'ControlLeft') ctrlTrigger.value = true
-  if (ctrlTrigger.value && e.code === 'Enter') sendMessage()
-}
-const handleKeyup = (value: string, { e }: any) => {
-  if (ctrlTrigger.value) ctrlTrigger.value = false
 }
 </script>

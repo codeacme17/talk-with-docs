@@ -51,7 +51,7 @@
 
 <script setup lang="tsx">
 import { reactive, ref } from 'vue'
-import { useChatStore } from '@/stores'
+import { useChatStore, type State } from '@/stores'
 
 const chatStore = useChatStore()
 
@@ -81,7 +81,7 @@ const protocolSelect = ref(() => (
   />
 ))
 
-const formData = reactive({
+const formData = reactive<State>({
   selection: '',
   web: '',
   files: [],
@@ -93,9 +93,21 @@ const handleChange = () => {
 }
 
 const loading = ref(false)
-const handleChoose = () => {
+const handleChoose = async () => {
+  loading.value = true
+  await selectLoader()
   if (formData.web) chatStore.web = formData.web
   if (!!formData.files.length) chatStore.files = formData.files
-  loading.value = true
+  chatStore.selection = formData.selection
+}
+
+const selectLoader = async () => {
+  switch (formData.selection) {
+    case 'web':
+      break
+
+    default:
+      break
+  }
 }
 </script>
