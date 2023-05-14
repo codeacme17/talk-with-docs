@@ -1,8 +1,8 @@
 import express from 'express'
 import bodyParser from 'body-parser'
-import webModel from './src/models/web.js'
-import chatModel from './src/models/chat.js'
 import 'dotenv/config'
+
+import { webModel, chatModel } from './src/models/index.js'
 
 const app = express()
 const port = 1818
