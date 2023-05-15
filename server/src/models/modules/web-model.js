@@ -1,21 +1,42 @@
+import { OpenAI } from 'langchain/llms/openai'
 import { ConversationalRetrievalQAChain } from 'langchain/chains'
-import { webLoader } from '../../loaders/index.js'
-import splitter from '../../utils/splitter.js'
-import { CONDENSE_PROMPT, QA_PROMPT } from '../../constants/index.js'
+import { webLoader, mdLoader } from '../../utils/loaders.js'
+import { CONDENSE_PROMPT, QA_PROMPT } from '../../constants/templates.js'
 import { init_db, fetch_db } from '../../utils/index-database.js'
+import splitter from '../../utils/splitter.js'
+import options from '../../utils/agent.js'
+import toMarkdown from '../../utils/to-markdown.js'
+import 'dotenv/config'
 
 export const initWeb = async (ctx) => {
-  const { url, namespace } = ctx
+  const { url, namespace, textKey } = ctx
   const rawDocs = await webLoader(url)
-  const docs = await splitter(rawDocs)
+  toMarkdown(rawDocs, namespace)
+  const mdDocs = await mdLoader(namespace)
+  const docs = await splitter(mdDocs)
 
-  await init_db({ docs, textKey: 'text', namespace })
+  await init_db({ docs, textKey, namespace })
 }
 
 export const chatWeb = async (ctx) => {
-  const { message, history } = ctx
+  const { message, history, namespace, text } = ctx
 
-  const vectorStore = fetch_db()
+  console.log(namespace)
+
+  const vectorStore = await fetch_db({
+    text,
+    namespace,
+  })
+
+  const model = new OpenAI(
+    {
+      temperature: 0,
+      modelName: 'gpt-3.5-turbo',
+    },
+    {
+      baseOptions: options,
+    }
+  )
 
   const chain = ConversationalRetrievalQAChain.fromLLM(
     model,

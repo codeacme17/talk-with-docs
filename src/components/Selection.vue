@@ -35,6 +35,15 @@
         <t-input placeholder="" v-model.trim="formData.web" />
       </t-input-adornment>
 
+      <div class="my-5"></div>
+
+      <t-input-adornment
+        prepend=" NAMESPACE "
+        v-show="formData.selection === 'web'"
+      >
+        <t-input placeholder="" v-model.trim="formData.namespace" />
+      </t-input-adornment>
+
       <t-upload
         action="https://service-bv448zsw-1257786608.gz.apigw.tencentcs.com/api/upload-demo"
         v-show="formData.selection === 'files'"
@@ -52,6 +61,7 @@
 <script setup lang="tsx">
 import { reactive, ref } from 'vue'
 import { useChatStore, type State } from '@/stores'
+import { WEB_API } from '@/apis'
 
 const chatStore = useChatStore()
 
@@ -85,6 +95,7 @@ const formData = reactive<State>({
   selection: '',
   web: '',
   files: [],
+  namespace: '',
 })
 
 const handleChange = () => {
@@ -104,6 +115,12 @@ const handleChoose = async () => {
 const selectLoader = async () => {
   switch (formData.selection) {
     case 'web':
+      await WEB_API.initWeb({
+        url: `https://${formData.web}`,
+        text: 'text',
+        namespace: formData.namespace!,
+      })
+      chatStore.namespace = formData.namespace
       break
 
     default:

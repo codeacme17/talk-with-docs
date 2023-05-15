@@ -4,7 +4,6 @@ const agent = new SocksProxyAgent('socks5://127.0.0.1:1086')
 const options = {
   httpAgent: agent,
   httpsAgent: agent,
-  timeout: 10 * 1000,
 }
 
 export default options

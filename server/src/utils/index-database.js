@@ -4,26 +4,28 @@ import { OpenAIEmbeddings } from 'langchain/embeddings/openai'
 import 'dotenv/config'
 import options from '../utils/agent.js'
 
+const embeddings = new OpenAIEmbeddings(
+  {},
+  {
+    baseOptions: options,
+  }
+)
+
+const pinecone = new PineconeClient()
+
+await pinecone.init({
+  apiKey: process.env.PINECONE_API_KEY,
+  environment: process.env.PINECONE_ENVIRONMENT,
+})
+
+const pineconeIndex = pinecone.Index(process.env.PINECONE_INDEX)
+
 const init_db = async (data) => {
   const { docs, textKey, namespace } = data
 
-  const pinecone = new PineconeClient()
-
-  await pinecone.init({
-    apiKey: process.env.PINECONE_API_KEY,
-    environment: process.env.PINECONE_ENVIRONMENT,
-  })
-
-  const embeddings = new OpenAIEmbeddings(
-    {},
-    {
-      baseOptions: options,
-    }
-  )
-
   try {
     await PineconeStore.fromDocuments(docs, embeddings, {
-      pineconeIndex: pinecone.Index(process.env.PINECONE_INDEX),
+      pineconeIndex,
       textKey,
       namespace,
     })
@@ -37,16 +39,18 @@ const init_db = async (data) => {
 const fetch_db = async (data) => {
   const { textKey, namespace } = data
 
-  const vectorStore = await PineconeStore.fromExistingIndex(
-    new OpenAIEmbeddings(),
-    {
+  try {
+    const vectorStore = await PineconeStore.fromExistingIndex(embeddings, {
       pineconeIndex,
       textKey,
       namespace,
-    }
-  )
-
-  return vectorStore
+    })
+    console.log(namespace, 'namespace------')
+    console.log(vectorStore)
+    return vectorStore
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 export { init_db, fetch_db }

@@ -1,12 +1,11 @@
 import { defineStore } from 'pinia'
 import type { UploadFile } from 'tdesign-vue-next'
-import type { Document } from 'langchain/document'
 
 export interface State {
   selection: 'chat' | 'web' | 'files' | ''
   web: string
   files: UploadFile[]
-  docs?: Document<Record<string, any>>[]
+  namespace?: string
 }
 
 export const useChatStore = defineStore('chat', {
@@ -14,13 +13,13 @@ export const useChatStore = defineStore('chat', {
     selection: '',
     web: '',
     files: [],
-    docs: [],
+    namespace: '',
   }),
 
   getters: {
     getSelection: (state) => state.selection,
     getWeb: (state) => state.web,
     getFiles: (state) => state.files,
-    getDocs: (state) => state.docs,
+    getCurrentNamespace: (state) => state.namespace,
   },
 })

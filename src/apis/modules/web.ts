@@ -1,10 +1,24 @@
 import axios from 'axios'
 
 export const WEB_API = {
-  web(data: string[]) {
+  initWeb(data: { url: string; namespace: string; text: string }) {
     return axios({
-      method: 'GET',
-      url: '/api/test',
+      method: 'POST',
+      url: '/api/initWeb',
+      data,
+    })
+  },
+
+  chatWeb(data: {
+    message: string
+    history: string[]
+    namespace: string
+    text: string
+  }) {
+    return axios({
+      method: 'POST',
+      url: '/api/chatWeb',
+      data,
     })
   },
 }

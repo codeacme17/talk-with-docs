@@ -18,9 +18,30 @@ app.post('/api/chat', async (req, res) => {
   })
 })
 
-// init web, when select a web
+//
+/* 
+  init web, when select a web
+  params: url
+          namespace
+          text
+*/
 app.post('/api/initWeb', async (req, res) => {
   const data = await webModel.initWeb(req.body)
+
+  res.status(200).json({
+    data: data,
+  })
+})
+
+/* 
+  chat with web
+  params: message
+          history
+          text
+          namespace
+*/
+app.post('/api/chatWeb', async (req, res) => {
+  const data = await webModel.chatWeb(req.body)
 
   res.status(200).json({
     data: data,
