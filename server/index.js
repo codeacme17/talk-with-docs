@@ -1,5 +1,6 @@
 import express from 'express'
 import bodyParser from 'body-parser'
+import multer from 'multer'
 import 'dotenv/config'
 
 import { webModel, chatModel } from './src/models/index.js'
@@ -14,7 +15,7 @@ app.post('/api/chat', async (req, res) => {
   const data = await chatModel(req.body)
 
   res.status(200).json({
-    data: data,
+    data,
   })
 })
 
@@ -29,7 +30,7 @@ app.post('/api/initWeb', async (req, res) => {
   const data = await webModel.initWeb(req.body)
 
   res.status(200).json({
-    data: data,
+    data,
   })
 })
 
@@ -44,7 +45,23 @@ app.post('/api/chatWeb', async (req, res) => {
   const data = await webModel.chatWeb(req.body)
 
   res.status(200).json({
-    data: data,
+    data,
+  })
+})
+
+/* 
+  init files
+  params: namespace
+          files
+  header: multipart/form-data
+*/
+const upload = multer()
+app.post('/api/initFiles', upload.array('files'), async (req, res) => {
+  console.log(req.body.namespace)
+  console.log(req.files)
+
+  res.json({
+    message: 'success',
   })
 })
 

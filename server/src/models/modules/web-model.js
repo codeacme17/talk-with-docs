@@ -12,7 +12,6 @@ export const initWeb = async (ctx) => {
   const { url, namespace, textKey } = ctx
   const rawDocs = await webLoader(url)
   // console.log(rawDocs)
-  return
   // toMarkdown(rawDocs, namespace)
   // const mdDocs = await mdLoader(namespace)
   const docs = await splitter(rawDocs)

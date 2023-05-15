@@ -125,7 +125,6 @@ const fetchRobotMessage = async () => {
   }
 
   if (chatStore.selection === 'web') {
-    console.log(1)
     res = await WEB_API.chatWeb({
       message: inputValue.value,
       history: [],

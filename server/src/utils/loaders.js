@@ -1,7 +1,9 @@
 import { PlaywrightWebBaseLoader } from 'langchain/document_loaders/web/playwright'
 import { UnstructuredLoader } from 'langchain/document_loaders/fs/unstructured'
-import path from 'path'
 import { fileURLToPath, URL } from 'url'
+import path from 'path'
+import { DocxLoader } from 'langchain/document_loaders/fs/docx'
+
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
 export const webLoader = async (url) => {
@@ -45,7 +47,7 @@ export const webLoader = async (url) => {
       const visitedUrls = new Set()
       await page.goto(url)
       await crawlPage(page, visitedUrls, urlInfo)
-      return result·
+      return result
     },
   })
 
@@ -61,4 +63,10 @@ export const mdLoader = async (fileName) => {
   const rawDocs = await loader.load()
 
   return rawDocs
+}
+
+export const docxLoader = async (file) => {
+  const loader = new DocxLoader(file)
+  const docs = await loader.load()
+  return docs
 }

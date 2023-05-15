@@ -39,18 +39,18 @@
 
       <t-input-adornment
         prepend=" NAMESPACE "
-        v-show="formData.selection === 'web'"
+        v-show="formData.selection === 'web' || formData.selection === 'files'"
       >
         <t-input placeholder="" v-model.trim="formData.namespace" />
       </t-input-adornment>
 
       <t-upload
-        action="https://service-bv448zsw-1257786608.gz.apigw.tencentcs.com/api/upload-demo"
         v-show="formData.selection === 'files'"
         v-model="formData.files"
         multiple
         :autoUpload="false"
         allowUploadDuplicateFile
+        class="mt-5"
       >
         <t-button theme="default"> CHOOSE FILE (allow multiple) </t-button>
       </t-upload>
@@ -61,7 +61,7 @@
 <script setup lang="tsx">
 import { reactive, ref } from 'vue'
 import { useChatStore, type State } from '@/stores'
-import { WEB_API } from '@/apis'
+import { WEB_API, FILES_API } from '@/apis'
 
 const chatStore = useChatStore()
 
@@ -107,8 +107,10 @@ const loading = ref(false)
 const handleChoose = async () => {
   loading.value = true
   await selectLoader()
+
   if (formData.web) chatStore.web = formData.web
   if (!!formData.files.length) chatStore.files = formData.files
+
   chatStore.selection = formData.selection
 }
 
@@ -120,6 +122,23 @@ const selectLoader = async () => {
         text: 'text',
         namespace: formData.namespace!,
       })
+      chatStore.namespace = formData.namespace
+      break
+
+    case 'files':
+      const _formData = new FormData()
+
+      formData.files.forEach((file, index) => {
+        console.log(file)
+        _formData.append('files', file.raw!)
+      })
+
+      _formData.append('namespace', formData.namespace!)
+
+      console.log(_formData)
+
+      await FILES_API.initFiles(_formData)
+
       chatStore.namespace = formData.namespace
       break
 
