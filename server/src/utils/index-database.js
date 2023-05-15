@@ -45,8 +45,6 @@ const fetch_db = async (data) => {
       textKey,
       namespace,
     })
-    console.log(namespace, 'namespace------')
-    console.log(vectorStore)
     return vectorStore
   } catch (error) {
     console.log(error)

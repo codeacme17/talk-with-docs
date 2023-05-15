@@ -11,9 +11,11 @@ import 'dotenv/config'
 export const initWeb = async (ctx) => {
   const { url, namespace, textKey } = ctx
   const rawDocs = await webLoader(url)
-  toMarkdown(rawDocs, namespace)
-  const mdDocs = await mdLoader(namespace)
-  const docs = await splitter(mdDocs)
+  // console.log(rawDocs)
+  return
+  // toMarkdown(rawDocs, namespace)
+  // const mdDocs = await mdLoader(namespace)
+  const docs = await splitter(rawDocs)
 
   await init_db({ docs, textKey, namespace })
 }
@@ -30,7 +32,7 @@ export const chatWeb = async (ctx) => {
 
   const model = new OpenAI(
     {
-      temperature: 0,
+      temperature: 0.9,
       modelName: 'gpt-3.5-turbo',
     },
     {

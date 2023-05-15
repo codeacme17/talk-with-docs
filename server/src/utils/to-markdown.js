@@ -13,9 +13,7 @@ const toMarkdown = (docs, namespace) => {
 const saveFile = (fileName, content) => {
   const filePath = path.resolve(__dirname, `../../sources/${fileName}.md`)
 
-  fs.writeFile(filePath, content, (err) => {
-    console.log(err)
-  })
+  fs.writeFileSync(filePath, content)
 }
 
 export default toMarkdown
