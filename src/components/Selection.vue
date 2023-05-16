@@ -41,7 +41,11 @@
         prepend=" NAMESPACE "
         v-show="formData.selection === 'web' || formData.selection === 'files'"
       >
-        <t-input placeholder="" v-model.trim="formData.namespace" />
+        <t-input
+          placeholder=""
+          v-model.trim="formData.namespace"
+          @change="handleNamespaceChange"
+        />
       </t-input-adornment>
 
       <t-upload
@@ -101,6 +105,7 @@ const formData = reactive<State>({
 const handleChange = () => {
   formData.web = ''
   formData.files = []
+  chatStore.selection = formData.selection
 }
 
 const loading = ref(false)
@@ -135,8 +140,6 @@ const selectLoader = async () => {
 
       _formData.append('namespace', formData.namespace!)
 
-      console.log(_formData)
-
       await FILES_API.initFiles(_formData)
 
       chatStore.namespace = formData.namespace
@@ -145,5 +148,10 @@ const selectLoader = async () => {
     default:
       break
   }
+}
+
+const handleNamespaceChange = () => {
+  chatStore.namespace = formData.namespace
+  console.log(chatStore.namespace)
 }
 </script>

@@ -15,13 +15,19 @@ dependencies:
     version: 4.18.2
   langchain:
     specifier: ^0.0.75
-    version: 0.0.75(@pinecone-database/pinecone@0.1.5)(mammoth@1.5.1)(playwright@1.33.0)
+    version: 0.0.75(@pinecone-database/pinecone@0.1.5)(mammoth@1.5.1)(pdf-parse@1.1.1)(playwright@1.33.0)
   mammoth:
     specifier: ^1.5.1
     version: registry.npmmirror.com/mammoth@1.5.1
   multer:
     specifier: 1.4.5-lts.1
     version: registry.npmmirror.com/multer@1.4.5-lts.1
+  nanoid:
+    specifier: ^4.0.2
+    version: registry.npmmirror.com/nanoid@4.0.2
+  pdf-parse:
+    specifier: ^1.1.1
+    version: registry.npmmirror.com/pdf-parse@1.1.1
   playwright:
     specifier: ^1.33.0
     version: registry.npmmirror.com/playwright@1.33.0
@@ -528,7 +534,7 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: false
 
-  /langchain@0.0.75(@pinecone-database/pinecone@0.1.5)(mammoth@1.5.1)(playwright@1.33.0):
+  /langchain@0.0.75(@pinecone-database/pinecone@0.1.5)(mammoth@1.5.1)(pdf-parse@1.1.1)(playwright@1.33.0):
     resolution: {integrity: sha512-5bulBe3pEDnCuO3W84E+pmns6+7oKdNomsApPD1PqjplEwT3szSYaY8bvqJVxYz2Hq1wcS3sL1OyL9rbC/s0NA==}
     engines: {node: '>=18'}
     peerDependencies:
@@ -642,6 +648,7 @@ packages:
       openai: 3.2.1
       p-queue: 6.6.2
       p-retry: 4.6.2
+      pdf-parse: registry.npmmirror.com/pdf-parse@1.1.1
       playwright: registry.npmmirror.com/playwright@1.33.0
       uuid: 9.0.0
       yaml: 2.2.2
@@ -1169,6 +1176,19 @@ packages:
       - encoding
     dev: false
 
+  registry.npmmirror.com/debug@3.2.7:
+    resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/debug/-/debug-3.2.7.tgz}
+    name: debug
+    version: 3.2.7
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
+    dependencies:
+      ms: registry.npmmirror.com/ms@2.1.3
+    dev: false
+
   registry.npmmirror.com/dingbat-to-unicode@1.0.1:
     resolution: {integrity: sha512-98l0sW87ZT58pU4i61wa2OHwxbiYSbuxsCBozaVnYX2iCnr3bLM3fIes1/ej7h1YdOKuKt/MLs706TVnALA65w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/dingbat-to-unicode/-/dingbat-to-unicode-1.0.1.tgz}
     name: dingbat-to-unicode
@@ -1301,6 +1321,12 @@ packages:
       minimist: registry.npmmirror.com/minimist@1.2.8
     dev: false
 
+  registry.npmmirror.com/ms@2.1.3:
+    resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/ms/-/ms-2.1.3.tgz}
+    name: ms
+    version: 2.1.3
+    dev: false
+
   registry.npmmirror.com/multer@1.4.5-lts.1:
     resolution: {integrity: sha512-ywPWvcDMeH+z9gQq5qYHCCy+ethsk4goepZ45GLD63fOu0YcNecQxi64nDs3qluZB+murG3/D4dJ7+dGctcCQQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/multer/-/multer-1.4.5-lts.1.tgz}
     name: multer
@@ -1314,6 +1340,20 @@ packages:
       object-assign: registry.npmmirror.com/object-assign@4.1.1
       type-is: registry.npmmirror.com/type-is@1.6.18
       xtend: registry.npmmirror.com/xtend@4.0.2
+    dev: false
+
+  registry.npmmirror.com/nanoid@4.0.2:
+    resolution: {integrity: sha512-7ZtY5KTCNheRGfEFxnedV5zFiORN1+Y1N6zvPTnHQd8ENUvfaDBeuJDZb2bN/oXwXxu3qkTXDzy57W5vAmDTBw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/nanoid/-/nanoid-4.0.2.tgz}
+    name: nanoid
+    version: 4.0.2
+    engines: {node: ^14 || ^16 || >=18}
+    hasBin: true
+    dev: false
+
+  registry.npmmirror.com/node-ensure@0.0.0:
+    resolution: {integrity: sha512-DRI60hzo2oKN1ma0ckc6nQWlHU69RH6xN0sjQTjMpChPfTYvKZdcQFfdYK2RWbJcKyUizSIy/l8OTGxMAM1QDw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/node-ensure/-/node-ensure-0.0.0.tgz}
+    name: node-ensure
+    version: 0.0.0
     dev: false
 
   registry.npmmirror.com/node-fetch@2.6.7:
@@ -1354,6 +1394,18 @@ packages:
     name: path-is-absolute
     version: 1.0.1
     engines: {node: '>=0.10.0'}
+    dev: false
+
+  registry.npmmirror.com/pdf-parse@1.1.1:
+    resolution: {integrity: sha512-v6ZJ/efsBpGrGGknjtq9J/oC8tZWq0KWL5vQrk2GlzLEQPUDB1ex+13Rmidl1neNN358Jn9EHZw5y07FFtaC7A==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/pdf-parse/-/pdf-parse-1.1.1.tgz}
+    name: pdf-parse
+    version: 1.1.1
+    engines: {node: '>=6.8.1'}
+    dependencies:
+      debug: registry.npmmirror.com/debug@3.2.7
+      node-ensure: registry.npmmirror.com/node-ensure@0.0.0
+    transitivePeerDependencies:
+      - supports-color
     dev: false
 
   registry.npmmirror.com/playwright-core@1.33.0:

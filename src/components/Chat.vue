@@ -8,7 +8,7 @@
 
   <t-card
     class="border-none my-3 py-3 overflow-y-scroll"
-    style="max-height: calc(100vh - 280px)"
+    style="max-height: calc(100vh - 280px - 240px)"
     id="chatContainer"
   >
     <div v-show="!chatList.length">Send message to start 👇</div>
@@ -68,7 +68,7 @@
 import { nextTick, reactive, ref } from 'vue'
 import { nanoid } from 'nanoid'
 import { useChatStore } from '@/stores'
-import { CHAT_API, WEB_API } from '@/apis'
+import { CHAT_API, WEB_API, FILES_API } from '@/apis'
 
 interface chatItem {
   id: string
@@ -135,7 +135,17 @@ const fetchRobotMessage = async () => {
     res = res.data.text
   }
 
-  console.log(res)
+  if (chatStore.selection === 'files') {
+    res = await FILES_API.chatFiles({
+      message: inputValue.value,
+      history: [],
+      text: 'text',
+      namespace: chatStore.namespace!,
+    })
+
+    res = res.data.text
+  }
+
   return res
 }
 

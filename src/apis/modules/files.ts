@@ -11,4 +11,17 @@ export const FILES_API = {
       data,
     })
   },
+
+  chatFiles(data: {
+    message: string
+    history: string[]
+    namespace: string
+    text: string
+  }) {
+    return axios({
+      method: 'POST',
+      url: '/api/chatFiles',
+      data,
+    })
+  },
 }

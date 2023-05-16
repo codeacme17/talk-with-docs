@@ -27,7 +27,7 @@
       "
     />
 
-    <Chat class="my-5" v-else />
+    <Chat class="my-5" />
   </section>
 </template>
 

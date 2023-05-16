@@ -17,9 +17,12 @@ export const useChatStore = defineStore('chat', {
   }),
 
   getters: {
-    getSelection: (state) => state.selection,
+    getSelection(state) {
+      console.log(state.selection)
+      return state.selection
+    },
     getWeb: (state) => state.web,
     getFiles: (state) => state.files,
-    getCurrentNamespace: (state) => state.namespace,
+    getNamespace: (state) => state.namespace,
   },
 })

@@ -2,10 +2,9 @@ import { OpenAI } from 'langchain/llms/openai'
 import { ConversationalRetrievalQAChain } from 'langchain/chains'
 import { webLoader, mdLoader } from '../../utils/loaders.js'
 import { CONDENSE_PROMPT, QA_PROMPT } from '../../constants/templates.js'
-import { init_db, fetch_db } from '../../utils/index-database.js'
+import { init_db, fetch_db } from '../../utils/vector-store.js'
 import splitter from '../../utils/splitter.js'
 import options from '../../utils/agent.js'
-import toMarkdown from '../../utils/to-markdown.js'
 import 'dotenv/config'
 
 export const initWeb = async (ctx) => {
@@ -22,8 +21,6 @@ export const initWeb = async (ctx) => {
 export const chatWeb = async (ctx) => {
   const { message, history, namespace, text } = ctx
 
-  console.log(namespace)
-
   const vectorStore = await fetch_db({
     text,
     namespace,
@@ -33,6 +30,7 @@ export const chatWeb = async (ctx) => {
     {
       temperature: 0.9,
       modelName: 'gpt-3.5-turbo',
+      maxTokens: 2000,
     },
     {
       baseOptions: options,

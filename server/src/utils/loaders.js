@@ -3,6 +3,11 @@ import { UnstructuredLoader } from 'langchain/document_loaders/fs/unstructured'
 import { fileURLToPath, URL } from 'url'
 import path from 'path'
 import { DocxLoader } from 'langchain/document_loaders/fs/docx'
+import { DirectoryLoader } from 'langchain/document_loaders/fs/directory'
+import { JSONLoader, JSONLinesLoader } from 'langchain/document_loaders/fs/json'
+import { TextLoader } from 'langchain/document_loaders/fs/text'
+import { CSVLoader } from 'langchain/document_loaders/fs/csv'
+import { PDFLoader } from 'langchain/document_loaders/fs/pdf'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
@@ -63,6 +68,22 @@ export const mdLoader = async (fileName) => {
   const rawDocs = await loader.load()
 
   return rawDocs
+}
+
+export const filesLoader = async (filesPath) => {
+  const loader = new DirectoryLoader(filesPath, {
+    '.json': (path) => new JSONLoader(path, '/texts'),
+    '.jsonl': (path) => new JSONLinesLoader(path, '/html'),
+    '.txt': (path) => new TextLoader(path),
+    '.csv': (path) => new CSVLoader(path, 'text'),
+    '.docx': (path) => new DocxLoader(path),
+    '.pdf': (path) => new PDFLoader(path),
+  })
+
+  const docs = await loader.load()
+  console.log({ docs })
+
+  return docs
 }
 
 export const docxLoader = async (file) => {
