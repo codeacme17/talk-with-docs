@@ -24,7 +24,7 @@
           <div class="ml-9 mr-32 animate-pulse" v-if="item.loading">
             <div class="h-5 bg-slate-700 rounded col-span-2"></div>
           </div>
-          <div class="ml-9 mr-32" v-else>{{ item.content }}</div>
+          <div class="ml-9 mr-32" v-else v-html="item.content"></div>
         </div>
 
         <div v-show="item.role === 'user'">
@@ -66,6 +66,8 @@
 
 <script setup lang="ts">
 import { nextTick, reactive, ref } from 'vue'
+import MarkdownIt from 'markdown-it'
+import highlight from 'highlight.js'
 import { nanoid } from 'nanoid'
 import { useChatStore } from '@/stores'
 import { CHAT_API, WEB_API, FILES_API } from '@/apis'
@@ -109,7 +111,8 @@ const reciveMessage = async () => {
     loading: true,
   })
   const res = await fetchRobotMessage()
-  chatList[chatList.length - 1].content = res
+
+  chatList[chatList.length - 1].content = toMarkdown(res)
   chatList[chatList.length - 1].loading = false
   scrollToBottom()
 }
@@ -146,6 +149,22 @@ const fetchRobotMessage = async () => {
     res = res.data.text
   }
 
+  return res
+}
+
+const toMarkdown = (text: string) => {
+  const md = new MarkdownIt({
+    highlight: function (text, lang) {
+      if (lang && highlight.getLanguage(lang)) {
+        try {
+          return highlight.highlight(text, { language: 'javascript' }).value
+        } catch (__) {}
+      }
+
+      return '' // use external default escaping
+    },
+  })
+  const res = md.render(text)
   return res
 }
 

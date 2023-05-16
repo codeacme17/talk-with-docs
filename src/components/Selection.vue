@@ -134,7 +134,6 @@ const selectLoader = async () => {
       const _formData = new FormData()
 
       formData.files.forEach((file, index) => {
-        console.log(file)
         _formData.append('files', file.raw!)
       })
 
@@ -152,6 +151,5 @@ const selectLoader = async () => {
 
 const handleNamespaceChange = () => {
   chatStore.namespace = formData.namespace
-  console.log(chatStore.namespace)
 }
 </script>

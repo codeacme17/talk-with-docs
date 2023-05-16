@@ -1,8 +1,7 @@
 import { fileURLToPath, URL } from 'url'
-import { OpenAI } from 'langchain/llms/openai'
 import { ConversationalRetrievalQAChain } from 'langchain/chains'
 
-import options from '../../utils/agent.js'
+import { openaiModel } from '../modules/openai.js'
 import splitter from '../../utils/splitter.js'
 import saveFile from '../../utils/save-file.js'
 import { filesLoader } from '../../utils/loaders.js'
@@ -33,19 +32,8 @@ export const chatFiles = async (ctx) => {
     namespace,
   })
 
-  const model = new OpenAI(
-    {
-      temperature: 0.9,
-      modelName: 'gpt-3.5-turbo',
-      maxTokens: 2000,
-    },
-    {
-      baseOptions: options,
-    }
-  )
-
   const chain = ConversationalRetrievalQAChain.fromLLM(
-    model,
+    openaiModel(),
     vectorStore.asRetriever(),
     {
       qaTemplate: QA_PROMPT,
