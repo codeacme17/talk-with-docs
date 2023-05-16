@@ -14,38 +14,25 @@
           />
         </t-select>
 
-        <t-button
-          theme="default"
-          class="ml-3 px-7"
-          :disabled="
-            !formData.files.length &&
-            !formData.web &&
-            formData.selection !== 'chat'
-          "
-          @click="handleChoose"
-        >
+        <t-button theme="default" class="ml-3 px-7" @click="handleChoose">
           CONFIRM
         </t-button>
       </t-form-item>
+
+      <t-input-adornment
+        prepend=" NAMESPACE "
+        v-show="formData.selection === 'web' || formData.selection === 'files'"
+      >
+        <t-input placeholder="" v-model.trim="formData.namespace" />
+      </t-input-adornment>
+
+      <div class="my-5"></div>
 
       <t-input-adornment
         :prepend="protocolSelect"
         v-show="formData.selection === 'web'"
       >
         <t-input placeholder="" v-model.trim="formData.web" />
-      </t-input-adornment>
-
-      <div class="my-5"></div>
-
-      <t-input-adornment
-        prepend=" NAMESPACE "
-        v-show="formData.selection === 'web' || formData.selection === 'files'"
-      >
-        <t-input
-          placeholder=""
-          v-model.trim="formData.namespace"
-          @change="handleNamespaceChange"
-        />
       </t-input-adornment>
 
       <t-upload
@@ -111,35 +98,41 @@ const handleChange = () => {
 const loading = ref(false)
 const handleChoose = async () => {
   loading.value = true
-  await selectLoader()
 
-  if (formData.web) chatStore.web = formData.web
-  if (!!formData.files.length) chatStore.files = formData.files
+  chatStore.web = formData.web
+  chatStore.files = formData.files
+  await selectLoader()
 
   chatStore.selection = formData.selection
 }
 
 const selectLoader = async () => {
+  console.log(formData.namespace)
+
   switch (formData.selection) {
     case 'web':
-      await WEB_API.initWeb({
-        url: `https://${formData.web}`,
-        text: 'text',
-        namespace: formData.namespace!,
-      })
+      if (formData.web) {
+        await WEB_API.initWeb({
+          url: `https://${formData.web}`,
+          text: 'text',
+          namespace: formData.namespace!,
+        })
+      }
+
       chatStore.namespace = formData.namespace
       break
 
     case 'files':
-      const _formData = new FormData()
+      if (formData.files.length) {
+        const _formData = new FormData()
 
-      formData.files.forEach((file, index) => {
-        _formData.append('files', file.raw!)
-      })
+        formData.files.forEach((file, index) => {
+          _formData.append('files', file.raw!)
+        })
+        _formData.append('namespace', formData.namespace!)
 
-      _formData.append('namespace', formData.namespace!)
-
-      await FILES_API.initFiles(_formData)
+        await FILES_API.initFiles(_formData)
+      }
 
       chatStore.namespace = formData.namespace
       break
@@ -148,8 +141,10 @@ const selectLoader = async () => {
       break
   }
 }
-
-const handleNamespaceChange = () => {
-  chatStore.namespace = formData.namespace
-}
 </script>
+
+<style>
+.t-input-adornment__text {
+  padding: 0px 17px;
+}
+</style>

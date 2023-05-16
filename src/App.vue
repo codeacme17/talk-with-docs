@@ -19,22 +19,21 @@
       </div>
     </header>
 
-    <Selection
-      v-if="
-        !chatStore.web &&
-        !chatStore.files.length &&
-        chatStore.selection !== 'chat'
-      "
-    />
+    <Selection v-if="chatStore.selection !== 'chat' && !chatStore.namespace" />
 
-    <Chat class="my-5" />
+    <Chat class="my-5" v-else />
   </section>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useChatStore } from '@/stores'
 
 const chatStore = useChatStore()
 
 document.documentElement.setAttribute('theme-mode', 'dark')
+
+const showChat = computed(() => {
+  return chatStore.selection && chatStore.namespace
+})
 </script>

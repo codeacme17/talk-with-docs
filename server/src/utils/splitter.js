@@ -2,7 +2,7 @@ import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter'
 
 const splitter = async (rawDocs) => {
   const splitter = new RecursiveCharacterTextSplitter({
-    chunkSize: 4000,
+    chunkSize: 2000,
     chunkOverlap: 200,
   })
 

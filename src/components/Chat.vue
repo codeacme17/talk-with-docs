@@ -1,6 +1,6 @@
 <template>
   <div v-if="!!chatStore.web">
-    now, you are chatting with <strong>{{ chatStore.web }}</strong>
+    now, you are chatting with <strong>{{ chatStore.namespace }}</strong>
   </div>
   <div v-if="chatStore.files.length" class="">
     now, you are chatting with <strong>file</strong>
@@ -8,7 +8,7 @@
 
   <t-card
     class="border-none my-3 py-3 overflow-y-scroll"
-    style="max-height: calc(100vh - 280px - 240px)"
+    style="max-height: calc(100vh - 280px)"
     id="chatContainer"
   >
     <div v-show="!chatList.length">Send message to start 👇</div>
@@ -163,6 +163,9 @@ const toMarkdown = (text: string) => {
 
       return '' // use external default escaping
     },
+    html: true,
+    linkify: true,
+    typographer: true,
   })
   const res = md.render(text)
   return res

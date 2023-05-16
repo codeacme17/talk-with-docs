@@ -1,7 +1,8 @@
+import path from 'path'
+import { fileURLToPath, URL } from 'url'
 import { PlaywrightWebBaseLoader } from 'langchain/document_loaders/web/playwright'
 import { UnstructuredLoader } from 'langchain/document_loaders/fs/unstructured'
-import { fileURLToPath, URL } from 'url'
-import path from 'path'
+import { GithubRepoLoader } from 'langchain/document_loaders/web/github'
 import { DocxLoader } from 'langchain/document_loaders/fs/docx'
 import { DirectoryLoader } from 'langchain/document_loaders/fs/directory'
 import { JSONLoader, JSONLinesLoader } from 'langchain/document_loaders/fs/json'
@@ -13,14 +14,22 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
 export const webLoader = async (url) => {
   const urlInfo = new URL(url)
-  const origin = urlInfo.origin
-  const path = urlInfo.pathname
+  const host = urlInfo.host
 
-  const loader = new PlaywrightWebBaseLoader(origin, {
-    launchOptions: {
-      headless: true,
-    },
-  })
+  let loader
+  if (host === 'github.com') {
+    loader = new GithubRepoLoader(url, {
+      branch: 'main',
+      recursive: true,
+      unknown: 'warn',
+    })
+  } else {
+    loader = new PlaywrightWebBaseLoader(url, {
+      launchOptions: {
+        headless: true,
+      },
+    })
+  }
 
   const rawDocs = await loader.load()
   return rawDocs

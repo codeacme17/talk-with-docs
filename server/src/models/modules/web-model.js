@@ -9,9 +9,6 @@ import 'dotenv/config'
 export const initWeb = async (ctx) => {
   const { url, namespace, textKey } = ctx
   const rawDocs = await webLoader(url)
-  // console.log(rawDocs)
-  // toMarkdown(rawDocs, namespace)
-  // const mdDocs = await mdLoader(namespace)
   const docs = await splitter(rawDocs)
 
   await init_db({ docs, textKey, namespace })
@@ -31,7 +28,7 @@ export const chatWeb = async (ctx) => {
     {
       qaTemplate: QA_PROMPT,
       questionGeneratorTemplate: CONDENSE_PROMPT,
-      returnSourceDocuments: true,
+      returnSourceDocuments: false,
     }
   )
 
