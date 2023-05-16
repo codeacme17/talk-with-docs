@@ -10,6 +10,7 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     Chat: typeof import('./src/components/Chat.vue')['default']
+    LeftArrow: typeof import('./src/components/icons/left-arrow.vue')['default']
     Logo: typeof import('./src/components/icons/logo.vue')['default']
     Selection: typeof import('./src/components/Selection.vue')['default']
     TAvatar: typeof import('tdesign-vue-next')['Avatar']

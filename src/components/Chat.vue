@@ -1,9 +1,26 @@
 <template>
-  <div v-if="!!chatStore.web">
-    now, you are chatting with <strong>{{ chatStore.namespace }}</strong>
-  </div>
-  <div v-if="chatStore.files.length" class="">
-    now, you are chatting with <strong>file</strong>
+  <div class="flex items-center">
+    <t-button
+      shape="circle"
+      variant="text"
+      theme="dark"
+      class="mr-2"
+      @click="handleBack"
+    >
+      <template #icon> <left-arrow /> </template>
+    </t-button>
+
+    <div v-if="chatStore.selection === 'chat'">
+      now, you are chatting with <strong>Turbo</strong>
+    </div>
+
+    <div v-if="chatStore.selection === 'web'">
+      now, you are chatting with <strong>{{ chatStore.namespace }}</strong>
+    </div>
+
+    <div v-if="chatStore.selection === 'files'" class="">
+      now, you are chatting with <strong>file</strong>
+    </div>
   </div>
 
   <t-card
@@ -65,7 +82,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, reactive, ref, toValue, unref } from 'vue'
+import { nextTick, reactive, ref, unref } from 'vue'
 import MarkdownIt from 'markdown-it'
 import highlight from 'highlight.js'
 import { nanoid } from 'nanoid'
@@ -79,6 +96,13 @@ interface chatItem {
   loading?: boolean
 }
 
+const chatStore = useChatStore()
+
+const handleBack = () => {
+  chatStore.namespace = ''
+  chatStore.selection = ''
+}
+
 const ctrlTrigger = ref(false)
 const handleKeydown = (value: string, { e }: any) => {
   if (e.code === 'ControlLeft') ctrlTrigger.value = true
@@ -88,7 +112,6 @@ const handleKeyup = (value: string, { e }: any) => {
   if (ctrlTrigger.value) ctrlTrigger.value = false
 }
 
-const chatStore = useChatStore()
 const inputValue = ref('')
 const chatList = reactive<chatItem[]>([])
 const chatMessage = {
