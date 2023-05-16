@@ -1,23 +1,16 @@
-### Start
+<br />
+<p align="center">
+  <img width="120" alt="logo" src="./public/logo.svg"/> 
+</p>
 
-#### npm
+<h3 align="center">
+  <samp>
+    talk-with-docs
+  </samp>
+</h3>
 
-```bash
-npm install
-npm run dev
-```
-
-#### yarn
-
-```bash
-yarn add
-yarn dev
-```
-
-#### pnpm
-
-```bash
-pnpm install
-pnpm dev
-```
-
+<p align="center">
+  <samp>
+    use 🦜️🔗 to communicate with varied files or web
+  </samp>
+</p>
