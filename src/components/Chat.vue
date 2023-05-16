@@ -65,7 +65,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, reactive, ref } from 'vue'
+import { nextTick, reactive, ref, toValue, unref } from 'vue'
 import MarkdownIt from 'markdown-it'
 import highlight from 'highlight.js'
 import { nanoid } from 'nanoid'
@@ -91,13 +91,29 @@ const handleKeyup = (value: string, { e }: any) => {
 const chatStore = useChatStore()
 const inputValue = ref('')
 const chatList = reactive<chatItem[]>([])
+const chatMessage = {
+  type: 'user',
+  content: '',
+}
+const reviceMessage = {
+  type: 'assistant',
+  content: '',
+}
+const messageHitory: any[] = []
+
 const sendMessage = () => {
   if (!inputValue.value) return
+
   chatList.push({
     id: nanoid(),
     role: 'user',
     content: inputValue.value,
   })
+
+  const content = unref(inputValue)
+
+  chatMessage.content = content
+
   scrollToBottom()
   reciveMessage()
   inputValue.value = ''
@@ -110,7 +126,10 @@ const reciveMessage = async () => {
     content: '',
     loading: true,
   })
+
   const res = await fetchRobotMessage()
+  reviceMessage.content = res
+  messageHitory.push([chatMessage, reviceMessage])
 
   chatList[chatList.length - 1].content = toMarkdown(res)
   chatList[chatList.length - 1].loading = false
@@ -130,7 +149,7 @@ const fetchRobotMessage = async () => {
   if (chatStore.selection === 'web') {
     res = await WEB_API.chatWeb({
       message: inputValue.value,
-      history: [],
+      history: messageHitory,
       text: 'text',
       namespace: chatStore.namespace!,
     })
@@ -141,7 +160,7 @@ const fetchRobotMessage = async () => {
   if (chatStore.selection === 'files') {
     res = await FILES_API.chatFiles({
       message: inputValue.value,
-      history: [],
+      history: messageHitory,
       text: 'text',
       namespace: chatStore.namespace!,
     })
@@ -154,14 +173,15 @@ const fetchRobotMessage = async () => {
 
 const toMarkdown = (text: string) => {
   const md = new MarkdownIt({
-    highlight: function (text, lang) {
-      if (lang && highlight.getLanguage(lang)) {
-        try {
-          return highlight.highlight(text, { language: 'javascript' }).value
-        } catch (__) {}
-      }
-
-      return '' // use external default escaping
+    highlight: function (str, lang) {
+      return (
+        '<pre class="hljs"><code>' +
+        highlight.highlight(str, {
+          language: 'javascript',
+          ignoreIllegals: true,
+        }).value +
+        '</code></pre>'
+      )
     },
     html: true,
     linkify: true,

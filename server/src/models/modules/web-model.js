@@ -32,6 +32,8 @@ export const chatWeb = async (ctx) => {
     }
   )
 
+  console.log(history)
+
   const response = await chain.call({
     question: message,
     chat_history: history || [],

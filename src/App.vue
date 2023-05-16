@@ -26,14 +26,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import { useChatStore } from '@/stores'
 
 const chatStore = useChatStore()
 
 document.documentElement.setAttribute('theme-mode', 'dark')
-
-const showChat = computed(() => {
-  return chatStore.selection && chatStore.namespace
-})
 </script>

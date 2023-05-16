@@ -31,3 +31,25 @@ html[theme-mode="dark"] ::-webkit-scrollbar-thumb{
 html[theme-mode="dark"] ::-webkit-scrollbar-track{
   background: transparent !important;
 } 
+
+pre {
+  background-color: var(--td-brand-color-6);
+  padding: 20px;
+  border-radius: 10px;
+  margin: 10px 0px;
+}
+
+code {
+  background-color: var(--td-brand-color-6);
+  padding: 0px 8px;
+  border-radius: 2px;
+}
+
+pre > code {
+  background-color: transparent !important;
+}
+
+p > a {
+  text-decoration: underline !important;
+  color: var(--td-warning-color-7);
+}
