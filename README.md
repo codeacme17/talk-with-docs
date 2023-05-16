@@ -1,4 +1,5 @@
 <br />
+
 <p align="center">
   <img width="120" alt="logo" src="./public/logo.svg"/> 
 </p>
@@ -14,3 +15,5 @@
     use 🦜️🔗 to communicate with varied files or web
   </samp>
 </p>
+
+<br />
