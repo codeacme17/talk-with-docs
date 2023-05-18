@@ -78,10 +78,11 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, reactive, ref, unref } from 'vue'
-import MarkdownIt from 'markdown-it'
-import highlight from 'highlight.js'
+import { nextTick, reactive, ref } from 'vue'
 import { nanoid } from 'nanoid'
+import MarkdownIt from 'markdown-it'
+import hljs from 'highlight.js'
+
 import { useChatStore } from '@/stores'
 import { CHAT_API, WEB_API, FILES_API } from '@/apis'
 
@@ -188,7 +189,7 @@ const toMarkdown = (text: string) => {
     highlight: function (str, lang) {
       return (
         '<pre class="hljs"><code>' +
-        highlight.highlight(str, {
+        hljs.highlight(str, {
           language: 'javascript',
           ignoreIllegals: true,
         }).value +
