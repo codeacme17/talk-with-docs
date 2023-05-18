@@ -1,15 +1,8 @@
 import { PineconeClient } from '@pinecone-database/pinecone'
 import { PineconeStore } from 'langchain/vectorstores/pinecone'
-import { OpenAIEmbeddings } from 'langchain/embeddings/openai'
 import 'dotenv/config'
-import options from './proxy.js'
 
-const embeddings = new OpenAIEmbeddings(
-  {},
-  {
-    baseOptions: options,
-  }
-)
+import { openai } from '../models/index.js'
 
 const pinecone = new PineconeClient()
 
@@ -24,7 +17,7 @@ const init_db = async (data) => {
   const { docs, textKey, namespace } = data
 
   try {
-    await PineconeStore.fromDocuments(docs, embeddings, {
+    await PineconeStore.fromDocuments(docs, openai.embeddings, {
       pineconeIndex,
       textKey,
       namespace,
@@ -40,11 +33,14 @@ const fetch_db = async (data) => {
   const { textKey, namespace } = data
 
   try {
-    const vectorStore = await PineconeStore.fromExistingIndex(embeddings, {
-      pineconeIndex,
-      textKey,
-      namespace,
-    })
+    const vectorStore = await PineconeStore.fromExistingIndex(
+      openai.embeddings,
+      {
+        pineconeIndex,
+        textKey,
+        namespace,
+      }
+    )
     return vectorStore
   } catch (error) {
     console.log(error)

@@ -1,9 +1,9 @@
 import { fileURLToPath, URL } from 'url'
 import { ConversationalRetrievalQAChain } from 'langchain/chains'
 
-import { openaiModel } from '../modules/openai.js'
-import { fileSplitter } from '../../utils/splitter.js'
 import saveFile from '../../utils/save-file.js'
+import { openaiModel } from './openai-model.js'
+import { fileSplitter } from '../../utils/splitter.js'
 import { filesLoader } from '../../utils/loaders.js'
 import { init_db, fetch_db } from '../../utils/vector-store.js'
 import { CONDENSE_PROMPT, QA_PROMPT } from '../../constants/templates.js'
@@ -35,7 +35,7 @@ export const chatFiles = async (ctx) => {
   const TOP_K = 6
 
   const chain = ConversationalRetrievalQAChain.fromLLM(
-    openaiModel(),
+    openaiModel('3.5'),
     vectorStore.asRetriever(TOP_K),
     {
       qaTemplate: QA_PROMPT,

@@ -58,15 +58,15 @@ const chatStore = useChatStore()
 
 const options = [
   {
-    label: 'just chat',
+    label: 'Turbo',
     value: 'chat',
   },
   {
-    label: 'web',
+    label: 'Web',
     value: 'web',
   },
   {
-    label: 'files',
+    label: 'Files',
     value: 'files',
   },
 ]

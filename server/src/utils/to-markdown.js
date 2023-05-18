@@ -1,7 +1,7 @@
-import TurndownService from 'turndown'
 import fs from 'fs'
 import path from 'path'
 import * as url from 'url'
+import TurndownService from 'turndown'
 
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
 

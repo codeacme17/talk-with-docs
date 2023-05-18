@@ -1,5 +1,6 @@
 import { ChatOpenAI } from 'langchain/chat_models/openai'
 import { HumanChatMessage } from 'langchain/schema'
+
 import options from '../../utils/proxy.js'
 
 export const chatModel = async (ctx) => {
@@ -10,6 +11,7 @@ export const chatModel = async (ctx) => {
       baseOptions: options,
     }
   )
+
   const response = await chat.call([new HumanChatMessage(prompt)])
   return response
 }

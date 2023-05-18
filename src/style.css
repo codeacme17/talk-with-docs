@@ -48,7 +48,7 @@ pre > code {
   background-color: transparent !important;
 }
 
-p  a {
+p a {
   text-decoration: underline !important;
   color: var(--td-warning-color-7);
 }

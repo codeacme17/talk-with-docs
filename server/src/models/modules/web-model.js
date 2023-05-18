@@ -1,6 +1,6 @@
 import { ConversationalRetrievalQAChain } from 'langchain/chains'
 
-import { openaiModel } from '../modules/openai.js'
+import { openaiModel } from './openai-model.js'
 import { webLoader } from '../../utils/loaders.js'
 import { CONDENSE_PROMPT, QA_PROMPT } from '../../constants/templates.js'
 import { init_db, fetch_db } from '../../utils/vector-store.js'
@@ -23,15 +23,15 @@ export const chatWeb = async (ctx) => {
     namespace,
   })
 
-  const TOP_K = 3
+  const TOP_K = 4
 
   const chain = ConversationalRetrievalQAChain.fromLLM(
-    openaiModel(),
+    openaiModel('3.5'),
     vectorStore.asRetriever(TOP_K),
     {
       qaTemplate: QA_PROMPT,
       questionGeneratorTemplate: CONDENSE_PROMPT,
-      returnSourceDocuments: true,
+      returnSourceDocuments: false,
     }
   )
 
