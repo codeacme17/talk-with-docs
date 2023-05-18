@@ -107,8 +107,6 @@ const handleChoose = async () => {
 }
 
 const selectLoader = async () => {
-  console.log(formData.namespace)
-
   switch (formData.selection) {
     case 'web':
       if (formData.web) {

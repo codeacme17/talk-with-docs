@@ -2,20 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-
 body {
   color: rgb(213, 213, 213);
   background-color: #1e1e1e;
-  font-family: "JetBrains Mono", "幼圆" !important;
+  font-family: 'JetBrains Mono', '幼圆' !important;
 }
 
 :root {
-  --td-font-family: "JetBrains Mono", "幼圆" !important;
+  --td-font-family: 'JetBrains Mono', '幼圆' !important;
   --td-brand-color: white !important;
 }
 
 ::-webkit-scrollbar {
-  width: 5px;    
+  width: 5px;
 }
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
@@ -25,12 +24,12 @@ body {
   border-radius: 0;
   background: var(--td-gray-color-5);
 }
-html[theme-mode="dark"] ::-webkit-scrollbar-thumb{
+html[theme-mode='dark'] ::-webkit-scrollbar-thumb {
   background: var(--td-gray-color-10);
-} 
-html[theme-mode="dark"] ::-webkit-scrollbar-track{
+}
+html[theme-mode='dark'] ::-webkit-scrollbar-track {
   background: transparent !important;
-} 
+}
 
 pre {
   background-color: var(--td-brand-color-6);
@@ -49,7 +48,12 @@ pre > code {
   background-color: transparent !important;
 }
 
-p > a {
+p  a {
+  text-decoration: underline !important;
+  color: var(--td-warning-color-7);
+}
+
+ul a {
   text-decoration: underline !important;
   color: var(--td-warning-color-7);
 }

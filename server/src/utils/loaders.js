@@ -17,21 +17,27 @@ export const webLoader = async (url) => {
   const host = urlInfo.host
 
   let loader
-  if (host === 'github.com') {
-    loader = new GithubRepoLoader(url, {
-      branch: 'main',
-      recursive: true,
-      unknown: 'warn',
-    })
-  } else {
-    loader = new PlaywrightWebBaseLoader(url, {
-      launchOptions: {
-        headless: true,
-      },
-    })
+  switch (host) {
+    case 'github.com':
+      loader = new GithubRepoLoader(url, {
+        branch: 'main',
+        recursive: true,
+        unknown: 'warn',
+      })
+      break
+
+    default:
+      loader = new PlaywrightWebBaseLoader(url, {
+        launchOptions: {
+          headless: true,
+        },
+      })
+      break
   }
 
   const rawDocs = await loader.load()
+
+  console.log(rawDocs.length, 'raw docs')
   return rawDocs
 }
 
@@ -41,7 +47,6 @@ export const mdLoader = async (fileName) => {
   )
 
   const rawDocs = await loader.load()
-
   return rawDocs
 }
 
@@ -55,14 +60,6 @@ export const filesLoader = async (filesPath) => {
     '.pdf': (path) => new PDFLoader(path),
   })
 
-  const docs = await loader.load()
-  console.log({ docs })
-
-  return docs
-}
-
-export const docxLoader = async (file) => {
-  const loader = new DocxLoader(file)
   const docs = await loader.load()
   return docs
 }

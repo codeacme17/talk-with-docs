@@ -1,14 +1,23 @@
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter'
 
-const splitter = async (rawDocs) => {
+export const fileSplitter = async (rawDocs) => {
   const splitter = new RecursiveCharacterTextSplitter({
     chunkSize: 2000,
-    chunkOverlap: 200,
+    chunkOverlap: 0,
   })
 
   const docs = await splitter.splitDocuments(rawDocs)
-
+  console.log(docs.length, 'splitted')
   return docs
 }
 
-export default splitter
+export const webSplitter = async (rawDocs) => {
+  const splitter = new RecursiveCharacterTextSplitter({
+    chunkSize: 5000,
+    chunkOverlap: 0,
+  })
+
+  const docs = await splitter.splitDocuments(rawDocs)
+  console.log(docs.length, 'splitted')
+  return docs
+}

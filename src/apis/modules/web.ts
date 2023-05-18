@@ -11,7 +11,7 @@ export const WEB_API = {
 
   chatWeb(data: {
     message: string
-    history: string[]
+    history: [string, string][] | []
     namespace: string
     text: string
   }) {

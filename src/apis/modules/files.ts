@@ -14,7 +14,7 @@ export const FILES_API = {
 
   chatFiles(data: {
     message: string
-    history: string[]
+    history: [string, string][] | []
     namespace: string
     text: string
   }) {

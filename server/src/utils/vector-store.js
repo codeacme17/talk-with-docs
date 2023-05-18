@@ -2,7 +2,7 @@ import { PineconeClient } from '@pinecone-database/pinecone'
 import { PineconeStore } from 'langchain/vectorstores/pinecone'
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai'
 import 'dotenv/config'
-import options from './agent.js'
+import options from './proxy.js'
 
 const embeddings = new OpenAIEmbeddings(
   {},

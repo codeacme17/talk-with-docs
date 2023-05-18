@@ -5,7 +5,7 @@
     <header class="flex items-center mb-7">
       <logo />
       <div class="ml-5">
-        <div class="text-xl">TALK WITH FILE & WEB</div>
+        <div class="text-xl">TALK WITH DOCS</div>
         <div>
           powered by
           <t-link

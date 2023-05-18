@@ -2,7 +2,7 @@ import { fileURLToPath, URL } from 'url'
 import { ConversationalRetrievalQAChain } from 'langchain/chains'
 
 import { openaiModel } from '../modules/openai.js'
-import splitter from '../../utils/splitter.js'
+import { fileSplitter } from '../../utils/splitter.js'
 import saveFile from '../../utils/save-file.js'
 import { filesLoader } from '../../utils/loaders.js'
 import { init_db, fetch_db } from '../../utils/vector-store.js'
@@ -19,7 +19,7 @@ export const initFiles = async (ctx, files) => {
   })
 
   const rawDocs = await filesLoader(dirPathUrl)
-  const docs = await splitter(rawDocs)
+  const docs = await fileSplitter(rawDocs)
 
   await init_db({ docs, textKey: 'text', namespace })
 }
@@ -32,9 +32,11 @@ export const chatFiles = async (ctx) => {
     namespace,
   })
 
+  const TOP_K = 6
+
   const chain = ConversationalRetrievalQAChain.fromLLM(
     openaiModel(),
-    vectorStore.asRetriever(),
+    vectorStore.asRetriever(TOP_K),
     {
       qaTemplate: QA_PROMPT,
       questionGeneratorTemplate: CONDENSE_PROMPT,

@@ -14,12 +14,8 @@
       now, you are chatting with <strong>Turbo</strong>
     </div>
 
-    <div v-if="chatStore.selection === 'web'">
+    <div v-else>
       now, you are chatting with <strong>{{ chatStore.namespace }}</strong>
-    </div>
-
-    <div v-if="chatStore.selection === 'files'" class="">
-      now, you are chatting with <strong>file</strong>
     </div>
   </div>
 
@@ -89,11 +85,12 @@ import { nanoid } from 'nanoid'
 import { useChatStore } from '@/stores'
 import { CHAT_API, WEB_API, FILES_API } from '@/apis'
 
-interface chatItem {
+interface ChatItem {
   id: string
   role: 'user' | 'robot'
   content: string
   loading?: boolean
+  source?: any[]
 }
 
 const chatStore = useChatStore()
@@ -113,16 +110,9 @@ const handleKeyup = (value: string, { e }: any) => {
 }
 
 const inputValue = ref('')
-const chatList = reactive<chatItem[]>([])
-const chatMessage = {
-  type: 'user',
-  content: '',
-}
-const reviceMessage = {
-  type: 'assistant',
-  content: '',
-}
-const messageHitory: any[] = []
+const chatList = reactive<ChatItem[]>([])
+const messageHitory: [string, string][] = []
+let historyChatMessage = ''
 
 const sendMessage = () => {
   if (!inputValue.value) return
@@ -133,12 +123,11 @@ const sendMessage = () => {
     content: inputValue.value,
   })
 
-  const content = unref(inputValue)
-
-  chatMessage.content = content
+  historyChatMessage = inputValue.value
 
   scrollToBottom()
   reciveMessage()
+
   inputValue.value = ''
 }
 
@@ -151,11 +140,11 @@ const reciveMessage = async () => {
   })
 
   const res = await fetchRobotMessage()
-  reviceMessage.content = res
-  messageHitory.push([chatMessage, reviceMessage])
+  messageHitory.push([historyChatMessage, res.text])
 
-  chatList[chatList.length - 1].content = toMarkdown(res)
+  chatList[chatList.length - 1].content = toMarkdown(res.text)
   chatList[chatList.length - 1].loading = false
+  chatList[chatList.length - 1].source = res.sourceDocuments
   scrollToBottom()
 }
 
@@ -166,7 +155,7 @@ const fetchRobotMessage = async () => {
     let temp = (await CHAT_API.chat({
       prompt: inputValue.value,
     })) as any
-    res = temp.data.text
+    res = temp.data
   }
 
   if (chatStore.selection === 'web') {
@@ -177,7 +166,7 @@ const fetchRobotMessage = async () => {
       namespace: chatStore.namespace!,
     })
 
-    res = res.data.text
+    res = res.data
   }
 
   if (chatStore.selection === 'files') {
@@ -188,7 +177,7 @@ const fetchRobotMessage = async () => {
       namespace: chatStore.namespace!,
     })
 
-    res = res.data.text
+    res = res.data
   }
 
   return res
