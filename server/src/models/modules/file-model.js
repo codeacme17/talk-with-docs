@@ -1,5 +1,8 @@
 import { fileURLToPath, URL } from 'url'
-import { ConversationalRetrievalQAChain } from 'langchain/chains'
+import {
+  ConversationalRetrievalQAChain,
+  loadSummarizationChain,
+} from 'langchain/chains'
 
 import saveFile from '../../utils/save-file.js'
 import { openaiModel } from './openai-model.js'
@@ -32,7 +35,7 @@ export const chatFiles = async (ctx) => {
     namespace,
   })
 
-  const TOP_K = 6
+  const TOP_K = 5
 
   const chain = ConversationalRetrievalQAChain.fromLLM(
     openaiModel('3.5'),
@@ -43,6 +46,10 @@ export const chatFiles = async (ctx) => {
       returnSourceDocuments: true,
     }
   )
+
+  const Sum_Chain = loadSummarizationChain(openaiModel('3.5'), {
+    type: 'map_reduce',
+  })
 
   const response = await chain.call({
     question: message,

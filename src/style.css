@@ -15,6 +15,7 @@ body {
 
 ::-webkit-scrollbar {
   width: 5px;
+  height: 4px;
 }
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
@@ -32,10 +33,11 @@ html[theme-mode='dark'] ::-webkit-scrollbar-track {
 }
 
 pre {
-  background-color: var(--td-brand-color-6);
+  background-color: var(--td-gray-color-12);
   padding: 20px;
   border-radius: 10px;
   margin: 10px 0px;
+  overflow-x: scroll;
 }
 
 code {
@@ -56,4 +58,13 @@ p a {
 ul a {
   text-decoration: underline !important;
   color: var(--td-warning-color-7);
+}
+
+
+.t-dialog__ctx .t-dialog{
+  padding-right: 12px;
+  padding-top: 15px;
+}
+.t-dialog__header{
+  padding-bottom: 15px;
 }

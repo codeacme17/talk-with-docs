@@ -123,9 +123,10 @@ const selectLoader = async () => {
     case 'files':
       if (formData.files.length) {
         const _formData = new FormData()
-
         formData.files.forEach((file, index) => {
-          _formData.append('files', file.raw!)
+          const encodedFileName = encodeURIComponent(file.name as string)
+          console.log(encodedFileName)
+          _formData.append('files', file.raw!, encodedFileName)
         })
         _formData.append('namespace', formData.namespace!)
 

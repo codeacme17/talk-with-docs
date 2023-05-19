@@ -4,7 +4,7 @@ export const FILES_API = {
   initFiles(data: FormData) {
     return axios({
       headers: {
-        'Content-Type': 'multipart/form-data',
+        'Content-Type': 'multipart/form-data; charset=utf-8',
       },
       method: 'POST',
       url: '/api/initFiles',

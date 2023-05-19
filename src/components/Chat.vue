@@ -28,16 +28,53 @@
 
     <div class="">
       <div v-for="item in chatList" class="mb-3">
-        <div v-show="item.role === 'robot'" class="flex flex-col">
+        <div v-show="item.role === 'robot'" class="flex flex-col pr-32">
           <header class="text-blue-500 flex item-center">
             <div class="text-xl">🤖</div>
             <div class="ml-2">ROBOT</div>
           </header>
 
-          <div class="ml-9 mr-32 animate-pulse" v-if="item.loading">
+          <div class="ml-9 animate-pulse" v-if="item.loading">
             <div class="h-5 bg-slate-700 rounded col-span-2"></div>
           </div>
-          <div class="ml-9 mr-32" v-else v-html="item.content"></div>
+
+          <div class="ml-9" v-else v-html="item.content"></div>
+
+          <div
+            class="flex flex-wrap w-full mt-3 ml-9"
+            v-show="!!item.sources?.length"
+          >
+            <t-divider align="left" class="mb-1 mt-2 text-gray-500 pr-10">
+              参考
+            </t-divider>
+
+            <div class="mt-2">
+              <t-tag
+                max-width="230"
+                theme="success"
+                v-for="source of item.sources"
+                class="mr-3 mb-2"
+                @click="handleClickTag(source)"
+              >
+                <t-tooltip
+                  theme="success"
+                  :content="
+                    source.metadata.source.split('/')[
+                      source.metadata.source.split('/').length - 1
+                    ]
+                  "
+                >
+                  <t-link>
+                    {{
+                      source.metadata.source.split('/')[
+                        source.metadata.source.split('/').length - 1
+                      ]
+                    }}
+                  </t-link>
+                </t-tooltip>
+              </t-tag>
+            </div>
+          </div>
         </div>
 
         <div v-show="item.role === 'user'">
@@ -75,6 +112,19 @@
       SEND
     </t-button>
   </div>
+
+  <t-dialog
+    v-model:visible="visible"
+    :closeOnEscKeydown="false"
+    :footer="false"
+    :destroyOnClose="true"
+    width="800px"
+    top="100px"
+    class="pl-2"
+  >
+    <template #header>{{ dialogTitle }}</template>
+    <div v-html="dialogContent" class="max-h-[600px] pr-3"></div>
+  </t-dialog>
 </template>
 
 <script setup lang="ts">
@@ -91,7 +141,7 @@ interface ChatItem {
   role: 'user' | 'robot'
   content: string
   loading?: boolean
-  source?: any[]
+  sources?: any[]
 }
 
 const chatStore = useChatStore()
@@ -111,7 +161,13 @@ const handleKeyup = (value: string, { e }: any) => {
 }
 
 const inputValue = ref('')
-const chatList = reactive<ChatItem[]>([])
+const chatList = reactive<ChatItem[]>([
+  {
+    id: nanoid(),
+    role: 'robot',
+    content: `很高兴能为您提供帮助，您现在正在与 “${chatStore.namespace}” 沟通，您可以进行询提问，我会尽力为您解答`,
+  },
+])
 const messageHitory: [string, string][] = []
 let historyChatMessage = ''
 
@@ -145,7 +201,7 @@ const reciveMessage = async () => {
 
   chatList[chatList.length - 1].content = toMarkdown(res.text)
   chatList[chatList.length - 1].loading = false
-  chatList[chatList.length - 1].source = res.sourceDocuments
+  chatList[chatList.length - 1].sources = res.sourceDocuments
   scrollToBottom()
 }
 
@@ -187,18 +243,18 @@ const fetchRobotMessage = async () => {
 const toMarkdown = (text: string) => {
   const md = new MarkdownIt({
     highlight: function (str, lang) {
-      return (
-        '<pre class="hljs"><code>' +
-        hljs.highlight(str, {
-          language: 'javascript',
-          ignoreIllegals: true,
-        }).value +
-        '</code></pre>'
-      )
+      if (lang && hljs.getLanguage(lang)) {
+        try {
+          return hljs.highlight(str, { language: lang }).value
+        } catch (__) {}
+      }
+
+      return ''
     },
     html: true,
     linkify: true,
     typographer: true,
+    breaks: true,
   })
   const res = md.render(text)
   return res
@@ -215,5 +271,33 @@ const scrollToBottom = () => {
       behavior: 'smooth',
     })
   })
+}
+
+const visible = ref(false)
+const dialogContent = ref('')
+const dialogTitle = ref('')
+
+const handleClickTag = (source: any) => {
+  const md = new MarkdownIt({
+    highlight: function (str, lang) {
+      if (lang && hljs.getLanguage(lang)) {
+        try {
+          return hljs.highlight(str, { language: lang }).value
+        } catch (__) {}
+      }
+
+      return ''
+    },
+    linkify: true,
+    typographer: true,
+    breaks: true,
+  })
+  const res = md.render(source.pageContent)
+  dialogContent.value = res
+  dialogTitle.value =
+    source.metadata.source.split('/')[
+      source.metadata.source.split('/').length - 1
+    ]
+  visible.value = true
 }
 </script>

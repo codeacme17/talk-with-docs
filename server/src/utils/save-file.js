@@ -1,15 +1,12 @@
 import fs from 'fs'
-import path from 'path'
-import { nanoid } from 'nanoid'
 
 const saveFile = (namespace, fileInfo) => {
+  console.log(fileInfo)
   const dirPath = `./sources/${namespace}`
   createDiv(dirPath)
 
   const { originalname } = fileInfo
-  const fileExtension = path.extname(originalname)
-  const id = nanoid()
-  const filename = `${id}.${fileExtension}`
+  const filename = decodeURIComponent(originalname)
 
   fs.writeFileSync(`${dirPath}/${filename}`, fileInfo.buffer)
 }
