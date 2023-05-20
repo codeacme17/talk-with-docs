@@ -1,16 +1,10 @@
+import fsPromise from 'fs/promises'
 import path from 'path'
-import { fileURLToPath, URL } from 'url'
+import { URL } from 'url'
 import { PlaywrightWebBaseLoader } from 'langchain/document_loaders/web/playwright'
-import { UnstructuredLoader } from 'langchain/document_loaders/fs/unstructured'
 import { GithubRepoLoader } from 'langchain/document_loaders/web/github'
-import { DocxLoader } from 'langchain/document_loaders/fs/docx'
-import { DirectoryLoader } from 'langchain/document_loaders/fs/directory'
-import { JSONLoader, JSONLinesLoader } from 'langchain/document_loaders/fs/json'
-import { TextLoader } from 'langchain/document_loaders/fs/text'
-import { CSVLoader } from 'langchain/document_loaders/fs/csv'
-import { PDFLoader } from 'langchain/document_loaders/fs/pdf'
-
-const __dirname = fileURLToPath(new URL('.', import.meta.url))
+import { mdSpitter } from './splitter.js'
+import { UnstructuredLoader } from 'langchain/document_loaders/fs/unstructured'
 
 export const webLoader = async (url) => {
   const urlInfo = new URL(url)
@@ -41,25 +35,44 @@ export const webLoader = async (url) => {
   return rawDocs
 }
 
-export const mdLoader = async (fileName) => {
-  const loader = new UnstructuredLoader(
-    path.resolve(__dirname, `../../sources/${fileName}.md`)
+export const filesLoader = async (filesPath) => {
+  const files = await fsPromise.readdir(filesPath)
+  const docs = []
+
+  await Promise.all(
+    files.map(async (file) => {
+      const fileType = path.extname(file)
+      let rawDocs
+      switch (fileType) {
+        case '.docx':
+          rawDocs = await markdownLoader(filesPath, file)
+          break
+
+        case '.md':
+          rawDocs = await markdownLoader(filesPath, file)
+          break
+
+        default:
+          const filePath = path.join(filesPath, '/', file)
+          const loader = new UnstructuredLoader(filePath)
+          rawDocs = await loader.load()
+          break
+      }
+
+      docs.push(...rawDocs)
+    })
   )
 
-  const rawDocs = await loader.load()
-  return rawDocs
+  console.log(docs.length)
+
+  return docs
 }
 
-export const filesLoader = async (filesPath) => {
-  const loader = new DirectoryLoader(filesPath, {
-    '.json': (path) => new JSONLoader(path, '/texts'),
-    '.jsonl': (path) => new JSONLinesLoader(path, '/html'),
-    '.txt': (path) => new TextLoader(path),
-    '.csv': (path) => new CSVLoader(path, 'text'),
-    '.docx': (path) => new DocxLoader(path),
-    '.pdf': (path) => new PDFLoader(path),
-  })
+const markdownLoader = async (filesPath, file) => {
+  const filePath = path.join(filesPath, file)
+  const fileContentBuffer = await fsPromise.readFile(filePath)
+  const fileContent = fileContentBuffer.toString('utf-8')
+  const rawDocs = await mdSpitter(fileContent, file)
 
-  const docs = await loader.load()
-  return docs
+  return rawDocs
 }

@@ -1,12 +1,8 @@
 import { fileURLToPath, URL } from 'url'
-import {
-  ConversationalRetrievalQAChain,
-  loadSummarizationChain,
-} from 'langchain/chains'
+import { ConversationalRetrievalQAChain } from 'langchain/chains'
 
 import saveFile from '../../utils/save-file.js'
 import { openaiModel } from './openai-model.js'
-import { fileSplitter } from '../../utils/splitter.js'
 import { filesLoader } from '../../utils/loaders.js'
 import { init_db, fetch_db } from '../../utils/vector-store.js'
 import { CONDENSE_PROMPT, QA_PROMPT } from '../../constants/templates.js'
@@ -15,14 +11,14 @@ export const initFiles = async (ctx, files) => {
   const { namespace } = ctx
   const dirPath = `../../../sources/${namespace}`
 
+  await Promise.all(
+    files.map((file) => {
+      return saveFile(namespace, file)
+    })
+  )
+
   const dirPathUrl = fileURLToPath(new URL(dirPath, import.meta.url))
-
-  files.forEach((file) => {
-    saveFile(namespace, file)
-  })
-
-  const rawDocs = await filesLoader(dirPathUrl)
-  const docs = await fileSplitter(rawDocs)
+  const docs = await filesLoader(dirPathUrl)
 
   await init_db({ docs, textKey: 'text', namespace })
 }
@@ -46,10 +42,6 @@ export const chatFiles = async (ctx) => {
       returnSourceDocuments: true,
     }
   )
-
-  const Sum_Chain = loadSummarizationChain(openaiModel('3.5'), {
-    type: 'map_reduce',
-  })
 
   const response = await chain.call({
     question: message,

@@ -6,7 +6,7 @@ import 'dotenv/config'
 import { webModel, chatModel, fileModel } from './src/models/index.js'
 
 const app = express()
-const port = 1818
+const port = 8888
 
 app.use(bodyParser.json())
 

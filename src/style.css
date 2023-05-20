@@ -11,6 +11,7 @@ body {
 :root {
   --td-font-family: 'JetBrains Mono', '幼圆' !important;
   --td-brand-color: white !important;
+  --table-border: 1px solid var(--td-gray-color-12);
 }
 
 ::-webkit-scrollbar {
@@ -67,4 +68,27 @@ ul a {
 }
 .t-dialog__header{
   padding-bottom: 15px;
+}
+
+
+table {
+  width: 100%;
+  border: var(--table-border);
+  border-radius: 10px;
+}
+
+th,
+td {
+  border-top: var(--table-border) ;
+  border-right: var(--table-border);
+  padding: 5px 0px;
+}
+
+th {
+  padding: 7px 0px;
+  background-color: var(--td-success-color-5);
+}
+
+tr:nth-child(2n) {
+  background-color: var(--td-gray-color-12);
 }

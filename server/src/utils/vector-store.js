@@ -26,7 +26,7 @@ const init_db = async (data) => {
     console.log(error)
   }
 
-  console.log('finish init')
+  console.log('finish init' + namespace)
 }
 
 const fetch_db = async (data) => {

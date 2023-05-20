@@ -48,31 +48,26 @@
               参考
             </t-divider>
 
-            <div class="mt-2">
-              <t-tag
-                max-width="230"
-                theme="success"
-                v-for="source of item.sources"
-                class="mr-3 mb-2"
-                @click="handleClickTag(source)"
-              >
-                <t-tooltip
+            <div class="mt-2 flex flex-wrap">
+              <div v-for="source of item.sources">
+                <t-tag
+                  max-width="230"
                   theme="success"
-                  :content="
-                    source.metadata.source.split('/')[
-                      source.metadata.source.split('/').length - 1
-                    ]
-                  "
+                  class="mr-3 mb-2"
+                  @click="handleClickTag(source)"
                 >
-                  <t-link>
-                    {{
-                      source.metadata.source.split('/')[
-                        source.metadata.source.split('/').length - 1
-                      ]
-                    }}
-                  </t-link>
-                </t-tooltip>
-              </t-tag>
+                  <!-- v-if="source.metadata.category !== 'Title'" -->
+                  <t-tooltip
+                    theme="success"
+                    :delay="500"
+                    :content="source.metadata.filename"
+                  >
+                    <t-link>
+                      {{ source.metadata.filename }}
+                    </t-link>
+                  </t-tooltip>
+                </t-tag>
+              </div>
             </div>
           </div>
         </div>
@@ -128,10 +123,11 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, reactive, ref } from 'vue'
+import { nextTick, onMounted, reactive, ref } from 'vue'
 import { nanoid } from 'nanoid'
 import MarkdownIt from 'markdown-it'
 import hljs from 'highlight.js'
+import markdownItAttrs from 'markdown-it-attrs'
 
 import { useChatStore } from '@/stores'
 import { CHAT_API, WEB_API, FILES_API } from '@/apis'
@@ -161,13 +157,18 @@ const handleKeyup = (value: string, { e }: any) => {
 }
 
 const inputValue = ref('')
-const chatList = reactive<ChatItem[]>([
-  {
-    id: nanoid(),
-    role: 'robot',
-    content: `很高兴能为您提供帮助，您现在正在与 “${chatStore.namespace}” 沟通，您可以进行询提问，我会尽力为您解答`,
-  },
-])
+const chatList = reactive<ChatItem[]>([])
+
+onMounted(() => {
+  if (chatStore.selection !== 'chat') {
+    chatList.push({
+      id: nanoid(),
+      role: 'robot',
+      content: `很高兴能为您提供帮助，您现在正在与 “${chatStore.namespace}” 沟通，您可以进行询提问，我会尽力为您解答`,
+    })
+  }
+})
+
 const messageHitory: [string, string][] = []
 let historyChatMessage = ''
 
@@ -256,6 +257,12 @@ const toMarkdown = (text: string) => {
     typographer: true,
     breaks: true,
   })
+
+  md.use(markdownItAttrs, {
+    leftDelimiter: '{',
+    rightDelimiter: '}',
+    allowedAttributes: [], // empty array = all attributes are allowed
+  })
   const res = md.render(text)
   return res
 }
@@ -294,10 +301,7 @@ const handleClickTag = (source: any) => {
   })
   const res = md.render(source.pageContent)
   dialogContent.value = res
-  dialogTitle.value =
-    source.metadata.source.split('/')[
-      source.metadata.source.split('/').length - 1
-    ]
+  dialogTitle.value = source.metadata.filename
   visible.value = true
 }
 </script>
