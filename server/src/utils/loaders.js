@@ -1,10 +1,13 @@
 import fsPromise from 'fs/promises'
 import path from 'path'
 import { URL } from 'url'
+import { Document } from 'langchain/document'
 import { PlaywrightWebBaseLoader } from 'langchain/document_loaders/web/playwright'
 import { GithubRepoLoader } from 'langchain/document_loaders/web/github'
 import { mdSpitter } from './splitter.js'
 import { UnstructuredLoader } from 'langchain/document_loaders/fs/unstructured'
+import { fileSplitter } from './splitter.js'
+import 'dotenv/config.js'
 
 export const webLoader = async (url) => {
   const urlInfo = new URL(url)
@@ -17,6 +20,23 @@ export const webLoader = async (url) => {
         branch: 'main',
         recursive: true,
         unknown: 'warn',
+        ignoreFiles: [
+          '.eslintrc.js',
+          '.eslintignore',
+          '.prettierrc',
+          'LICENSE',
+          'pnpm-lock.yaml',
+          'tsconfig.json',
+          'tsconfig.node.json',
+          'vite.config.ts',
+          '.editorconfig',
+          'example/*',
+          'docs/*',
+          'lib/*',
+          '.husky/*',
+          '.github/*',
+        ],
+        accessToken: process.env.GITHUB_ACCESS_TOKEN,
       })
       break
 
@@ -42,7 +62,10 @@ export const filesLoader = async (filesPath) => {
   await Promise.all(
     files.map(async (file) => {
       const fileType = path.extname(file)
+      const filePath = path.join(filesPath, '/', file)
+
       let rawDocs
+
       switch (fileType) {
         case '.docx':
           rawDocs = await markdownLoader(filesPath, file)
@@ -53,9 +76,22 @@ export const filesLoader = async (filesPath) => {
           break
 
         default:
-          const filePath = path.join(filesPath, '/', file)
+          const filename = path.basename(filePath)
+
           const loader = new UnstructuredLoader(filePath)
           rawDocs = await loader.load()
+
+          let temp
+          rawDocs.forEach((doc) => {
+            temp += doc.pageContent
+          })
+
+          const fallDoc = new Document({
+            pageContent: temp,
+            metadata: { filename: filename },
+          })
+
+          rawDocs = await fileSplitter([fallDoc])
           break
       }
 
@@ -64,7 +100,6 @@ export const filesLoader = async (filesPath) => {
   )
 
   console.log(docs.length)
-
   return docs
 }
 

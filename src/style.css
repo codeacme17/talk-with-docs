@@ -56,6 +56,11 @@ p a {
   color: var(--td-warning-color-7);
 }
 
+li a {
+  text-decoration: underline !important;
+  color: var(--td-warning-color-7);
+}
+
 ul a {
   text-decoration: underline !important;
   color: var(--td-warning-color-7);

@@ -31,7 +31,7 @@ export const chatWeb = async (ctx) => {
     {
       qaTemplate: QA_PROMPT,
       questionGeneratorTemplate: CONDENSE_PROMPT,
-      returnSourceDocuments: false,
+      returnSourceDocuments: true,
     }
   )
 

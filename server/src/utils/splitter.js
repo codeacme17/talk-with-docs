@@ -31,7 +31,7 @@ export const mdSpitter = async (rawDocs, filename) => {
 
 export const webSplitter = async (rawDocs) => {
   const splitter = new RecursiveCharacterTextSplitter({
-    chunkSize: 2000,
+    chunkSize: 1000,
     chunkOverlap: 0,
   })
 

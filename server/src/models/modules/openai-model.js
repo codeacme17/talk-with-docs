@@ -8,8 +8,9 @@ export const openaiModel = (type) => {
     case '3.5':
       return new OpenAI(
         {
-          temperature: 0.5,
+          temperature: 0,
           modelName: 'gpt-3.5-turbo',
+          verbose: true,
         },
         {
           baseOptions: options,

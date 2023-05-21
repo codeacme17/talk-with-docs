@@ -31,7 +31,7 @@ export const chatFiles = async (ctx) => {
     namespace,
   })
 
-  const TOP_K = 5
+  const TOP_K = 4
 
   const chain = ConversationalRetrievalQAChain.fromLLM(
     openaiModel('3.5'),
@@ -46,6 +46,7 @@ export const chatFiles = async (ctx) => {
   const response = await chain.call({
     question: message,
     chat_history: history || [],
+    // chat_history: [],
   })
 
   return response

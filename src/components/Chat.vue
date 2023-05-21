@@ -50,23 +50,44 @@
 
             <div class="mt-2 flex flex-wrap">
               <div v-for="source of item.sources">
-                <t-tag
-                  max-width="230"
+                <!-- <t-tooltip
                   theme="success"
-                  class="mr-3 mb-2"
-                  @click="handleClickTag(source)"
+                  :delay="500"
+                  v-if="source.metadata.filename.split('/').length > 1"
+                  :content="
+                    source.metadata.filename.split('/')[
+                      source.metadata.filename.split('/').length - 1
+                    ]
+                  "
                 >
-                  <!-- v-if="source.metadata.category !== 'Title'" -->
-                  <t-tooltip
+                  <t-tag
+                    max-width="280"
                     theme="success"
-                    :delay="500"
-                    :content="source.metadata.filename"
+                    class="mr-3 mb-2 cursor-pointer"
+                    @click="handleClickTag(source)"
                   >
-                    <t-link>
-                      {{ source.metadata.filename }}
-                    </t-link>
-                  </t-tooltip>
-                </t-tag>
+                    {{
+                      source.metadata.filename.split('/')[
+                        source.metadata.filename.split('/').length - 1
+                      ]
+                    }}
+                  </t-tag>
+                </t-tooltip> -->
+
+                <t-tooltip
+                  theme="success"
+                  :delay="500"
+                  :content="source.metadata.filename || source.metadata.source"
+                >
+                  <t-tag
+                    max-width="280"
+                    theme="success"
+                    class="mr-3 mb-2 cursor-pointer"
+                    @click="handleClickTag(source)"
+                  >
+                    {{ source.metadata.filename || source.metadata.source }}
+                  </t-tag>
+                </t-tooltip>
               </div>
             </div>
           </div>
@@ -169,7 +190,7 @@ onMounted(() => {
   }
 })
 
-const messageHitory: [string, string][] = []
+let messageHitory: [string, string][] = []
 let historyChatMessage = ''
 
 const sendMessage = () => {
@@ -198,7 +219,13 @@ const reciveMessage = async () => {
   })
 
   const res = await fetchRobotMessage()
+
+  if (messageHitory.length > 5) {
+    messageHitory.shift()
+  }
   messageHitory.push([historyChatMessage, res.text])
+  // messageHitory = [[historyChatMessage, res.text]]
+  // messageHitory = [[historyChatMessage, '']]
 
   chatList[chatList.length - 1].content = toMarkdown(res.text)
   chatList[chatList.length - 1].loading = false
@@ -292,16 +319,16 @@ const handleClickTag = (source: any) => {
           return hljs.highlight(str, { language: lang }).value
         } catch (__) {}
       }
-
       return ''
     },
+    html: true,
     linkify: true,
     typographer: true,
     breaks: true,
   })
   const res = md.render(source.pageContent)
   dialogContent.value = res
-  dialogTitle.value = source.metadata.filename
+  dialogTitle.value = source.metadata.filename || source.metadata.source
   visible.value = true
 }
 </script>

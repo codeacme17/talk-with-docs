@@ -10,6 +10,7 @@
     "type-check": "vue-tsc --noEmit"
   },
   "dependencies": {
+    "@microsoft/fetch-event-source": "^2.0.1",
     "axios": "^1.4.0",
     "highlight.js": "^11.8.0",
     "markdown-it": "^13.0.1",
