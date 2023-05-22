@@ -3,6 +3,7 @@ import { fetchEventSource } from '@microsoft/fetch-event-source'
 
 interface ChatParams {
   prompt: string
+  history: [string, string][]
 }
 
 export const CHAT_API = {

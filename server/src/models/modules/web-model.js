@@ -2,7 +2,7 @@ import { ConversationalRetrievalQAChain } from 'langchain/chains'
 
 import { openaiModel } from './openai-model.js'
 import { webLoader } from '../../utils/loaders.js'
-import { CONDENSE_PROMPT, QA_PROMPT } from '../../constants/templates.js'
+import { WEB_CONDENSE_PROMPT, QA_PROMPT } from '../../constants/templates.js'
 import { init_db, fetch_db } from '../../utils/vector-store.js'
 import { webSplitter } from '../../utils/splitter.js'
 import 'dotenv/config'
@@ -30,7 +30,7 @@ export const chatWeb = async (ctx) => {
     vectorStore.asRetriever(TOP_K),
     {
       qaTemplate: QA_PROMPT,
-      questionGeneratorTemplate: CONDENSE_PROMPT,
+      questionGeneratorTemplate: WEB_CONDENSE_PROMPT,
       returnSourceDocuments: true,
     }
   )
@@ -38,6 +38,7 @@ export const chatWeb = async (ctx) => {
   const response = await chain.call({
     question: message,
     chat_history: history || [],
+    // chat_history: [],
   })
 
   return response

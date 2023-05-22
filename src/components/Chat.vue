@@ -220,9 +220,8 @@ const reciveMessage = async () => {
 
   const res = await fetchRobotMessage()
 
-  if (messageHitory.length > 5) {
-    messageHitory.shift()
-  }
+  if (messageHitory.length > 5) messageHitory.shift()
+
   messageHitory.push([historyChatMessage, res.text])
   // messageHitory = [[historyChatMessage, res.text]]
   // messageHitory = [[historyChatMessage, '']]
@@ -239,6 +238,7 @@ const fetchRobotMessage = async () => {
   if (chatStore.selection === 'chat') {
     let temp = (await CHAT_API.chat({
       prompt: inputValue.value,
+      history: messageHitory,
     })) as any
     res = temp.data
   }
