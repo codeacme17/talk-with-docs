@@ -97,3 +97,15 @@ th {
 tr:nth-child(2n) {
   background-color: var(--td-gray-color-12);
 }
+
+.t-upload__card-item {
+  width: 100%;
+}
+
+.t-upload__card-item > .t-upload__image-add {
+  width: 100%;
+}
+
+.t-upload__card-content {
+  width: 100%;
+}

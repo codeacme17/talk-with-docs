@@ -45,6 +45,20 @@
       >
         <t-button theme="default"> CHOOSE FILE (allow multiple) </t-button>
       </t-upload>
+
+      <t-upload
+        ref="uploadRef1"
+        v-show="formData.selection === 'image'"
+        v-model="formData.files"
+        theme="image"
+        accept="image/*"
+        :auto-upload="false"
+        :locale="{
+          triggerUploadText: {
+            image: '请选择图片',
+          },
+        }"
+      ></t-upload>
     </t-form>
   </t-card>
 </template>
@@ -55,22 +69,24 @@ import { useChatStore, type State } from '@/stores'
 import { WEB_API, FILES_API } from '@/apis'
 
 const chatStore = useChatStore()
-
 const options = [
   {
-    label: '🤖 Turbo ',
+    label: '🤖 Turbo',
     value: 'chat',
   },
   {
-    label: '🌐 Web ',
+    label: '🌐 Web',
     value: 'web',
   },
   {
-    label: '🗂️ Files ',
+    label: '🗂️ Files',
     value: 'files',
   },
+  {
+    label: '🖼️ Image',
+    value: 'image',
+  },
 ]
-
 const protocolSelect = ref(() => (
   <t-select
     autoWidth
@@ -81,7 +97,6 @@ const protocolSelect = ref(() => (
     defaultValue="https://"
   />
 ))
-
 const formData = reactive<State>({
   selection: '',
   web: '',

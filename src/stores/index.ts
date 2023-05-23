@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import type { UploadFile } from 'tdesign-vue-next'
 
 export interface State {
-  selection: 'chat' | 'web' | 'files' | ''
+  selection: 'chat' | 'web' | 'files' | 'image' | ''
   web: string
   files: UploadFile[]
   namespace?: string
