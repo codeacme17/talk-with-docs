@@ -1,13 +1,18 @@
+import path from 'path'
 import express from 'express'
 import bodyParser from 'body-parser'
 import multer from 'multer'
 import 'dotenv/config'
-
+import { fileURLToPath, URL } from 'url'
 import { webModel, chatModel, fileModel } from './src/models/index.js'
 
 const app = express()
 const port = 8888
 
+const __dirname = fileURLToPath(new URL('.', import.meta.url))
+const staticDir = path.join(__dirname, '/static')
+
+app.use(express.static(staticDir))
 app.use(bodyParser.json())
 
 // normal chat model router

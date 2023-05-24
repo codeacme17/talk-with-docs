@@ -1,5 +1,6 @@
 import fsPromise from 'fs/promises'
 import path from 'path'
+import fs from 'fs'
 import { URL } from 'url'
 import { Document } from 'langchain/document'
 import { PlaywrightWebBaseLoader } from 'langchain/document_loaders/web/playwright'
@@ -7,6 +8,8 @@ import { GithubRepoLoader } from 'langchain/document_loaders/web/github'
 import { mdSpitter } from './splitter.js'
 import { UnstructuredLoader } from 'langchain/document_loaders/fs/unstructured'
 import { fileSplitter } from './splitter.js'
+import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter'
+
 import 'dotenv/config.js'
 
 export const webLoader = async (url) => {
@@ -63,6 +66,7 @@ export const filesLoader = async (filesPath) => {
     files.map(async (file) => {
       const fileType = path.extname(file)
       const filePath = path.join(filesPath, '/', file)
+      const filename = path.basename(filePath)
 
       let rawDocs
 
@@ -75,23 +79,12 @@ export const filesLoader = async (filesPath) => {
           rawDocs = await markdownLoader(filesPath, file)
           break
 
+        case '.html':
+          rawDocs = await htmlLoader(filePath, filename)
+          break
+
         default:
-          const filename = path.basename(filePath)
-
-          const loader = new UnstructuredLoader(filePath)
-          rawDocs = await loader.load()
-
-          let temp
-          rawDocs.forEach((doc) => {
-            temp += doc.pageContent
-          })
-
-          const fallDoc = new Document({
-            pageContent: temp,
-            metadata: { filename: filename },
-          })
-
-          rawDocs = await fileSplitter([fallDoc])
+          rawDocs = await defaultLoader(filePath, filename)
           break
       }
 
@@ -108,6 +101,48 @@ const markdownLoader = async (filesPath, file) => {
   const fileContentBuffer = await fsPromise.readFile(filePath)
   const fileContent = fileContentBuffer.toString('utf-8')
   const rawDocs = await mdSpitter(fileContent, file)
+
+  return rawDocs
+}
+
+const htmlLoader = async (filePath, filename) => {
+  const rawText = fs.readFileSync(filePath, 'utf-8')
+
+  const splitter = new RecursiveCharacterTextSplitter({
+    chunkSize: 1000,
+    chunkOverlap: 0,
+  })
+
+  console.log(filename)
+
+  const rawDocs = await splitter.createDocuments(
+    [rawText],
+    [
+      {
+        filename: filename,
+      },
+    ]
+  )
+
+  return rawDocs
+}
+
+const defaultLoader = async (filePath, filename) => {
+  const loader = new UnstructuredLoader(filePath)
+
+  let rawDocs = await loader.load()
+
+  let temp
+  rawDocs.forEach((doc) => {
+    temp += doc.pageContent
+  })
+
+  const fallDoc = new Document({
+    pageContent: temp,
+    metadata: { filename: filename },
+  })
+
+  rawDocs = await fileSplitter([fallDoc])
 
   return rawDocs
 }

@@ -19,7 +19,6 @@ export const chatModel = async (ctx) => {
   const chat = new ChatOpenAI(
     {
       temperature: 0.9,
-      modelName: 'gpt-3.5-turbo',
       streaming: false,
     },
     {
