@@ -30,6 +30,10 @@ const save = async (fileInfo, namespace) => {
       await parseDocx(dirPath, namespace)
       break
 
+    case '.doc':
+      await parseDoc(dirPath, namespace)
+      break
+
     default:
       await fsPromise.writeFile(
         `${dirPath}/${decodeURIComponent(rawFilename)}${fileType}`,
@@ -40,13 +44,28 @@ const save = async (fileInfo, namespace) => {
   }
 }
 
+const parseDoc = async (dirPath, namespace) => {
+  const source = path.join(dirPath, `${decodeURIComponent(rawFilename)}.doc`)
+  const target = path.join(dirPath, `${decodeURIComponent(rawFilename)}.html`)
+
+  await fsPromise.writeFile(source, fileBuffer, 'utf-8')
+  await execa('pandoc', [
+    source,
+    '-o',
+    target,
+    `--extract-media=./static/images/${namespace}`,
+  ])
+
+  await parseHTML(target)
+  fs.rmSync(source)
+}
+
 const parseDocx = async (dirPath, namespace) => {
   const source = path.join(dirPath, `${decodeURIComponent(rawFilename)}.docx`)
   const target = path.join(dirPath, `${decodeURIComponent(rawFilename)}.html`)
 
   await fsPromise.writeFile(source, fileBuffer, 'utf-8')
   await execa('pandoc', [
-    '-s',
     source,
     '-o',
     target,

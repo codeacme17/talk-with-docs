@@ -10,12 +10,13 @@ import { FILE_CONDENSE_PROMPT, QA_PROMPT } from '../../constants/templates.js'
 export const initFiles = async (ctx, files) => {
   const { namespace } = ctx
   const dirPath = `../../../sources/${namespace}`
+  const dirPathUrl = fileURLToPath(new URL(dirPath, import.meta.url))
 
   await Promise.all(files.map((file) => saveFile(namespace, file)))
 
-  const dirPathUrl = fileURLToPath(new URL(dirPath, import.meta.url))
   const docs = await filesLoader(dirPathUrl)
 
+  return
   await init_db({ docs, textKey: 'text', namespace })
 }
 

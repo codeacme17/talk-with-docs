@@ -113,13 +113,13 @@ const htmlLoader = async (filePath, filename) => {
     chunkOverlap: 0,
   })
 
-  console.log(filename)
+  const rawName = path.basename(filename, '.html')
 
   const rawDocs = await splitter.createDocuments(
     [rawText],
     [
       {
-        filename: filename,
+        filename: rawName,
       },
     ]
   )
