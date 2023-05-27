@@ -64,21 +64,22 @@ SOCKS5_PROXY_ADDRESS="socks5://..."
 ## Support type
 |       | type | suffix |    |
 |-------|------|------|--|
-|   ☑️   |word  |  .doc/.docx    |  only `.docx` files support in-document image parsing  | 
-|   ☑️   |pdf  |  .pdf    |  not support  image parsing  | 
-|   ☑️   |HTML  |  .html  |  support  image parsing  | 
-|   ☑️   |image  |  .png/.jpg/webp    |    | 
+|   ☑️   |word  |  `.doc` `.docx`    |  only `.docx` files support in-document image parsing  | 
+|   ☑️   |pdf  |  `.pdf`    |  not support  image parsing  | 
+|   ☑️   |HTML  |  `.html`  |  support  image parsing  | 
+|   ☑️   |image  |  `.png` `.jpg` `.webp`    |    | 
+|   ☑️   |web  |     | just use `url`   | 
 |   📌   |audio  |  `pending dev...`    |    | 
 |   📌   |video  |  `pending dev...`    |    | 
 
 
-## How its work
+## How it work
 
 #### embedding
-<img alt="embedding" src="./public/embedding.png"/> 
+<img alt="embedding" src="./docs/embedding.png"/> 
 
 #### explain image
-<img alt="embedding" src="./public/image-explain.png"/> 
+<img alt="embedding" src="./docs/image-explain.png"/> 
 
 
 ## Contributing
