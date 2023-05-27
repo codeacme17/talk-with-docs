@@ -34,8 +34,8 @@ export const chatFiles = async (ctx) => {
   )
   const response = await chain.call({
     question: message,
-    // chat_history: history || [],
     chat_history: [],
+    // chat_history: history || [],
   })
 
   return response

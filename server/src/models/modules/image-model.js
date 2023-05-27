@@ -5,10 +5,11 @@ import 'dotenv/config'
 import translator from '../../utils/translator.js'
 import { HfInference } from '@huggingface/inference'
 import { fileURLToPath, URL } from 'url'
-import { createDir } from '../../utils/share.js'
+import { createDir, recall } from '../../utils/share.js'
 
 const hf = new HfInference(process.env.HUGGINGFACE_API_KEY, {
   use_gpu: true,
+  use_cache: true,
 })
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 const STATIC_DIR_PATH = path.resolve(__dirname, '../../../static')
@@ -42,13 +43,16 @@ export const chatImage = async (ctx) => {
 }
 
 export const explainImage = async (file) => {
-  const FILE_PATH = path.join(STATIC_DIR_PATH, file)
-  const response = await hf.imageToText({
-    model: 'nlpconnect/vit-gpt2-image-captioning',
-    data: fs.readFileSync(FILE_PATH),
-  })
-  const answer = await translator(response.generated_text, 'en', 'zh')
-  return {
-    text: answer,
-  }
+  return await recall(async () => {
+    const FILE_PATH = path.join(STATIC_DIR_PATH, file)
+    const arrayBuffer = (await fs.promises.readFile(FILE_PATH)).buffer
+    const response = await hf.imageToText({
+      data: arrayBuffer,
+      model: 'nlpconnect/vit-gpt2-image-captioning',
+    })
+    const answer = await translator(response.generated_text, 'en', 'zh')
+    return {
+      text: answer,
+    }
+  }, 3)
 }
