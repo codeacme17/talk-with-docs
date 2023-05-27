@@ -17,13 +17,12 @@ export const initWeb = async (ctx) => {
 
 export const chatWeb = async (ctx) => {
   const { message, history, namespace, text } = ctx
+  const TOP_K = 4
 
   const vectorStore = await fetch_db({
     text,
     namespace,
   })
-
-  const TOP_K = 4
 
   const chain = ConversationalRetrievalQAChain.fromLLM(
     openaiModel('3.5'),
@@ -37,8 +36,7 @@ export const chatWeb = async (ctx) => {
 
   const response = await chain.call({
     question: message,
-    chat_history: history || [],
-    // chat_history: [],
+    chat_history: [],
   })
 
   return response

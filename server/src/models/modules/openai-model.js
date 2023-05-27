@@ -1,7 +1,6 @@
 import { OpenAI } from 'langchain/llms/openai'
 import { ChatOpenAI } from 'langchain/chat_models/openai'
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai'
-
 import options from '../../utils/proxy.js'
 
 export const openaiModel = (type, temperature = 0) => {

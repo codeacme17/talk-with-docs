@@ -1,11 +1,6 @@
 import fs from 'fs'
 
-export const createDir = (DIR_PATH) => {
-  if (fs.existsSync(DIR_PATH)) return
-  else fs.mkdirSync(DIR_PATH)
-}
-
-export const recall = async (func, maxRetries) => {
+export const recall = async (func, maxRetries = 3) => {
   let retries = 0
 
   while (retries < maxRetries) {
@@ -18,4 +13,9 @@ export const recall = async (func, maxRetries) => {
     }
   }
   throw new Error(`Failed after ${maxRetries} retries.`)
+}
+
+export const createDir = (DIR_PATH) => {
+  if (fs.existsSync(DIR_PATH)) return
+  else fs.mkdirSync(DIR_PATH)
 }

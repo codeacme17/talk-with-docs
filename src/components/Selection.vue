@@ -113,12 +113,12 @@ const handleChange = () => {
 const loading = ref(false)
 const handleChoose = async () => {
   loading.value = true
-
   chatStore.web = formData.web
   chatStore.files = formData.files
-  await selectLoader()
 
+  await selectLoader()
   chatStore.selection = formData.selection
+  chatStore.namespace = formData.namespace
 }
 
 const selectLoader = async () => {
@@ -164,7 +164,5 @@ const selectLoader = async () => {
     default:
       break
   }
-
-  chatStore.namespace = formData.namespace
 }
 </script>

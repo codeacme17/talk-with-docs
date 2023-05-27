@@ -68,10 +68,9 @@ const parseHTML = async (target) => {
       const img = $(element)
       const originalSrc = img.attr('src').replace('./static', '')
       const newSrc = 'http://localhost:8888' + originalSrc
-      img.attr('src', newSrc)
       const res = await imageModel.explainImage(originalSrc)
 
-      console.log(res.text)
+      img.attr('src', newSrc)
       img.attr('alt', res.text)
     })
   )

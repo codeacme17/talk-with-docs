@@ -28,18 +28,20 @@ export const chatImage = async (ctx) => {
   const question = await translator(message, 'zh', 'en')
   const buffer = await fs.promises.readFile(FILE_PATH)
 
-  const response = await hf.visualQuestionAnswering({
-    model: 'dandelin/vilt-b32-finetuned-vqa',
-    inputs: {
-      question: question,
-      image: buffer.buffer,
-    },
-  })
+  return await recall(async () => {
+    const response = await hf.visualQuestionAnswering({
+      model: 'dandelin/vilt-b32-finetuned-vqa',
+      inputs: {
+        question: question,
+        image: buffer.buffer,
+      },
+    })
 
-  const answer = await translator(response.answer, 'en', 'zh')
-  return {
-    text: answer,
-  }
+    const answer = await translator(response.answer, 'en', 'zh')
+    return {
+      text: answer,
+    }
+  })
 }
 
 export const explainImage = async (file) => {
@@ -54,5 +56,5 @@ export const explainImage = async (file) => {
     return {
       text: answer,
     }
-  }, 3)
+  })
 }
