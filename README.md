@@ -79,7 +79,7 @@ SOCKS5_PROXY_ADDRESS="socks5://..."
 <img alt="embedding" src="./docs/embedding.png"/> 
 
 #### explain image
-<img alt="embedding" src="./docs/image-explain.png"/> 
+<img alt="embedding" src="./docs/image-explains.png"/> 
 
 
 ## Contributing
