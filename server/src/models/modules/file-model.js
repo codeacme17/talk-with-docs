@@ -11,9 +11,7 @@ export const initFiles = async (ctx, files) => {
   const { namespace } = ctx
   const dirPath = `../../../sources/${namespace}`
   const dirPathUrl = fileURLToPath(new URL(dirPath, import.meta.url))
-
   await Promise.all(files.map((file) => saveFile(namespace, file)))
-
   const docs = await filesLoader(dirPathUrl)
 
   return
@@ -22,14 +20,11 @@ export const initFiles = async (ctx, files) => {
 
 export const chatFiles = async (ctx) => {
   const { message, history, namespace, text } = ctx
-
   const vectorStore = await fetch_db({
     text,
     namespace,
   })
-
   const TOP_K = 4
-
   const chain = ConversationalRetrievalQAChain.fromLLM(
     openaiModel('3.5'),
     vectorStore.asRetriever(TOP_K),
@@ -39,7 +34,6 @@ export const chatFiles = async (ctx) => {
       returnSourceDocuments: true,
     }
   )
-
   const response = await chain.call({
     question: message,
     // chat_history: history || [],

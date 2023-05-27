@@ -2,11 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  color: rgb(213, 213, 213);
-  background-color: #1e1e1e;
-  font-family: 'JetBrains Mono', '幼圆' !important;
-}
 
 :root {
   --td-font-family: 'JetBrains Mono', '幼圆' !important;
@@ -14,21 +9,31 @@ body {
   --table-border: 1px solid var(--td-gray-color-12);
 }
 
+body {
+  color: rgb(213, 213, 213);
+  background-color: #1e1e1e;
+  font-family: 'JetBrains Mono', '幼圆' !important;
+}
+
 ::-webkit-scrollbar {
   width: 5px;
   height: 4px;
 }
+
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
   background: var(--td-gray-color-5);
 }
+
 ::-webkit-scrollbar-track {
   border-radius: 0;
   background: var(--td-gray-color-5);
 }
+
 html[theme-mode='dark'] ::-webkit-scrollbar-thumb {
   background: var(--td-gray-color-10);
 }
+
 html[theme-mode='dark'] ::-webkit-scrollbar-track {
   background: transparent !important;
 }
@@ -109,3 +114,38 @@ tr:nth-child(2n) {
 .t-upload__card-content {
   width: 100%;
 }
+
+.t-input-adornment__text {
+  padding: 0px 17px;
+}
+
+#chatContainer img {
+  width: 500px !important;
+  height: auto !important;
+  margin: 10px 0px;
+}
+
+.t-dialog img {
+  width: 300px !important;
+  height: auto !important;
+  margin: 10px 0px;
+}
+
+.t-dialog p {
+  margin: 5px;
+}
+
+.t-dialog h1 {
+  color: var(--td-gray-color-1);
+  font-size: 18px;
+  margin: 10px 0px !important;
+  font-weight: 600;
+}
+
+.t-dialog h2 {
+  color: var(--td-gray-color-1);
+  font-size: 14px;
+  margin: 10px 0px !important;
+  font-weight: 600;
+}
+

@@ -4,6 +4,8 @@ import path from 'path'
 import cheerio from 'cheerio'
 import { execa } from 'execa'
 import { fileURLToPath, URL } from 'url'
+import { imageModel } from '../models/index.js'
+import { createDir } from './share.js'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 const SOURCES_DIR_PATH = path.resolve(__dirname, '../../sources')
@@ -15,7 +17,7 @@ let fileBuffer
 const saveFile = async (namespace, fileInfo) => {
   dirPath = path.resolve(SOURCES_DIR_PATH, namespace)
   namespace = namespace
-  createDiv()
+  createDir(dirPath)
   await save(fileInfo, namespace)
 }
 
@@ -30,10 +32,6 @@ const save = async (fileInfo, namespace) => {
       await parseDocx(dirPath, namespace)
       break
 
-    case '.doc':
-      await parseDoc(dirPath, namespace)
-      break
-
     default:
       await fsPromise.writeFile(
         `${dirPath}/${decodeURIComponent(rawFilename)}${fileType}`,
@@ -42,22 +40,6 @@ const save = async (fileInfo, namespace) => {
       )
       break
   }
-}
-
-const parseDoc = async (dirPath, namespace) => {
-  const source = path.join(dirPath, `${decodeURIComponent(rawFilename)}.doc`)
-  const target = path.join(dirPath, `${decodeURIComponent(rawFilename)}.html`)
-
-  await fsPromise.writeFile(source, fileBuffer, 'utf-8')
-  await execa('pandoc', [
-    source,
-    '-o',
-    target,
-    `--extract-media=./static/images/${namespace}`,
-  ])
-
-  await parseHTML(target)
-  fs.rmSync(source)
 }
 
 const parseDocx = async (dirPath, namespace) => {
@@ -79,26 +61,22 @@ const parseDocx = async (dirPath, namespace) => {
 const parseHTML = async (target) => {
   const html = fs.readFileSync(target, 'utf8')
   const $ = cheerio.load(html)
-
   const images = $('img')
 
-  images.each((index, element) => {
-    const img = $(element)
-    let originalSrc = img.attr('src')
+  await Promise.all(
+    Array.from(images).map(async (element) => {
+      const img = $(element)
+      const originalSrc = img.attr('src').replace('./static', '')
+      const newSrc = 'http://localhost:8888' + originalSrc
+      img.attr('src', newSrc)
+      const res = await imageModel.explainImage(originalSrc)
 
-    originalSrc = originalSrc.replace('./static', '')
-
-    const newSrc = 'http://localhost:8888' + originalSrc
-
-    img.attr('src', newSrc)
-  })
+      console.log(res.text)
+      img.attr('alt', res.text)
+    })
+  )
 
   await fsPromise.writeFile(target, $.html(), 'utf8')
-}
-
-const createDiv = async () => {
-  if (fs.existsSync(dirPath)) return
-  else fs.mkdirSync(dirPath)
 }
 
 export default saveFile

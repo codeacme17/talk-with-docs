@@ -50,30 +50,6 @@
 
             <div class="mt-2 flex flex-wrap">
               <div v-for="source of item.sources">
-                <!-- <t-tooltip
-                  theme="success"
-                  :delay="500"
-                  v-if="source.metadata.filename.split('/').length > 1"
-                  :content="
-                    source.metadata.filename.split('/')[
-                      source.metadata.filename.split('/').length - 1
-                    ]
-                  "
-                >
-                  <t-tag
-                    max-width="280"
-                    theme="success"
-                    class="mr-3 mb-2 cursor-pointer"
-                    @click="handleClickTag(source)"
-                  >
-                    {{
-                      source.metadata.filename.split('/')[
-                        source.metadata.filename.split('/').length - 1
-                      ]
-                    }}
-                  </t-tag>
-                </t-tooltip> -->
-
                 <t-tooltip
                   theme="success"
                   :delay="500"
@@ -149,9 +125,8 @@ import { nanoid } from 'nanoid'
 import MarkdownIt from 'markdown-it'
 import hljs from 'highlight.js'
 import markdownItAttrs from 'markdown-it-attrs'
-
 import { useChatStore } from '@/stores'
-import { CHAT_API, WEB_API, FILES_API } from '@/apis'
+import { CHAT_API, WEB_API, FILES_API, IMAGE_API } from '@/apis'
 
 interface ChatItem {
   id: string
@@ -221,11 +196,7 @@ const reciveMessage = async () => {
   const res = await fetchRobotMessage()
 
   if (messageHitory.length > 5) messageHitory.shift()
-
   messageHitory.push([historyChatMessage, res.text])
-  // messageHitory = [[historyChatMessage, res.text]]
-  // messageHitory = [[historyChatMessage, '']]
-
   chatList[chatList.length - 1].content = toMarkdown(res.text)
   chatList[chatList.length - 1].loading = false
   chatList[chatList.length - 1].sources = res.sourceDocuments
@@ -250,7 +221,6 @@ const fetchRobotMessage = async () => {
       text: 'text',
       namespace: chatStore.namespace!,
     })
-
     res = res.data
   }
 
@@ -261,7 +231,14 @@ const fetchRobotMessage = async () => {
       text: 'text',
       namespace: chatStore.namespace!,
     })
+    res = res.data
+  }
 
+  if (chatStore.selection === 'image') {
+    res = await IMAGE_API.chatImage({
+      message: inputValue.value,
+      namespace: chatStore.namespace!,
+    })
     res = res.data
   }
 
@@ -276,7 +253,6 @@ const toMarkdown = (text: string) => {
           return hljs.highlight(str, { language: lang }).value
         } catch (__) {}
       }
-
       return ''
     },
     html: true,

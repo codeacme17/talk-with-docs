@@ -10,6 +10,7 @@ export const openaiModel = (type) => {
         {
           temperature: 0,
           verbose: true,
+          modelName: 'gpt-3.5-turbo',
         },
         {
           baseOptions: options,

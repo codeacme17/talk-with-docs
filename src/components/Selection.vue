@@ -55,7 +55,7 @@
         :auto-upload="false"
         :locale="{
           triggerUploadText: {
-            image: '请选择图片',
+            image: 'choose an image',
           },
         }"
       ></t-upload>
@@ -66,7 +66,7 @@
 <script setup lang="tsx">
 import { reactive, ref } from 'vue'
 import { useChatStore, type State } from '@/stores'
-import { WEB_API, FILES_API } from '@/apis'
+import { WEB_API, FILES_API, IMAGE_API } from '@/apis'
 
 const chatStore = useChatStore()
 const options = [
@@ -131,8 +131,6 @@ const selectLoader = async () => {
           namespace: formData.namespace!,
         })
       }
-
-      chatStore.namespace = formData.namespace
       break
 
     case 'files':
@@ -147,18 +145,26 @@ const selectLoader = async () => {
 
         await FILES_API.initFiles(_formData)
       }
+      break
 
-      chatStore.namespace = formData.namespace
+    case 'image':
+      if (formData.files.length) {
+        const _formData = new FormData()
+
+        formData.files.forEach((file) => {
+          formData.namespace = file.name
+          const encodedFileName = encodeURIComponent(file.name as string)
+          _formData.append('files', file.raw!, encodedFileName)
+        })
+
+        await IMAGE_API.initImage(_formData)
+      }
       break
 
     default:
       break
   }
+
+  chatStore.namespace = formData.namespace
 }
 </script>
-
-<style>
-.t-input-adornment__text {
-  padding: 0px 17px;
-}
-</style>

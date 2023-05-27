@@ -20,6 +20,7 @@ export const chatModel = async (ctx) => {
     {
       temperature: 0.9,
       streaming: false,
+      modelName: 'gpt-3.5-turbo',
     },
     {
       baseOptions: options,

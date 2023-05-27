@@ -1,6 +1,9 @@
 lockfileVersion: '6.0'
 
 dependencies:
+  '@huggingface/inference':
+    specifier: ^2.5.0
+    version: registry.npmmirror.com/@huggingface/inference@2.5.0
   '@pinecone-database/pinecone':
     specifier: ^0.1.5
     version: registry.npmmirror.com/@pinecone-database/pinecone@0.1.5
@@ -21,10 +24,13 @@ dependencies:
     version: 4.18.2
   langchain:
     specifier: ^0.0.75
-    version: 0.0.75(@pinecone-database/pinecone@0.1.5)(cheerio@1.0.0-rc.12)(mammoth@1.5.1)(pdf-parse@1.1.1)(playwright@1.33.0)
+    version: 0.0.75(@huggingface/inference@2.5.0)(@pinecone-database/pinecone@0.1.5)(cheerio@1.0.0-rc.12)(mammoth@1.5.1)(pdf-parse@1.1.1)(playwright@1.33.0)
   mammoth:
     specifier: ^1.5.1
     version: registry.npmmirror.com/mammoth@1.5.1
+  md5:
+    specifier: ^2.3.0
+    version: registry.npmmirror.com/md5@2.3.0
   multer:
     specifier: 1.4.5-lts.1
     version: registry.npmmirror.com/multer@1.4.5-lts.1
@@ -540,7 +546,7 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: false
 
-  /langchain@0.0.75(@pinecone-database/pinecone@0.1.5)(cheerio@1.0.0-rc.12)(mammoth@1.5.1)(pdf-parse@1.1.1)(playwright@1.33.0):
+  /langchain@0.0.75(@huggingface/inference@2.5.0)(@pinecone-database/pinecone@0.1.5)(cheerio@1.0.0-rc.12)(mammoth@1.5.1)(pdf-parse@1.1.1)(playwright@1.33.0):
     resolution: {integrity: sha512-5bulBe3pEDnCuO3W84E+pmns6+7oKdNomsApPD1PqjplEwT3szSYaY8bvqJVxYz2Hq1wcS3sL1OyL9rbC/s0NA==}
     engines: {node: '>=18'}
     peerDependencies:
@@ -641,6 +647,7 @@ packages:
     dependencies:
       '@anthropic-ai/sdk': 0.4.3
       '@dqbd/tiktoken': 1.0.7
+      '@huggingface/inference': registry.npmmirror.com/@huggingface/inference@2.5.0
       '@pinecone-database/pinecone': registry.npmmirror.com/@pinecone-database/pinecone@0.1.5
       ansi-styles: 5.2.0
       binary-extensions: 2.2.0
@@ -1109,6 +1116,13 @@ packages:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
     dev: false
 
+  registry.npmmirror.com/@huggingface/inference@2.5.0:
+    resolution: {integrity: sha512-X3NSdrWAKNTLAsEKabH48Wc+Osys+S7ilRcH1bf9trSDmJlzPVXDseXMRBHCFPCYd5AAAIakhENO4zCqstVg8g==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@huggingface/inference/-/inference-2.5.0.tgz}
+    name: '@huggingface/inference'
+    version: 2.5.0
+    engines: {node: '>=18'}
+    dev: false
+
   registry.npmmirror.com/@pinecone-database/pinecone@0.1.5:
     resolution: {integrity: sha512-Amkc6JFjhRzKqf5GkdI2Pd4H7+EqUtNp7kaJdCSgDT2PG2cokx+bGyRBWzrkYD7Kwo5jtWaPNWcblysEUPWCVg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@pinecone-database/pinecone/-/pinecone-0.1.5.tgz}
     name: '@pinecone-database/pinecone'
@@ -1159,6 +1173,12 @@ packages:
     engines: {node: '>=10.16.0'}
     dependencies:
       streamsearch: registry.npmmirror.com/streamsearch@1.1.0
+    dev: false
+
+  registry.npmmirror.com/charenc@0.0.2:
+    resolution: {integrity: sha512-yrLQ/yVUFXkzg7EDQsPieE/53+0RlaWTs+wBrvW36cyilJ2SaDWfl4Yj7MtLTXleV9uEKefbAGUPv2/iWSooRA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/charenc/-/charenc-0.0.2.tgz}
+    name: charenc
+    version: 0.0.2
     dev: false
 
   registry.npmmirror.com/cheerio-select@2.1.0:
@@ -1226,6 +1246,12 @@ packages:
       path-key: registry.npmmirror.com/path-key@3.1.1
       shebang-command: registry.npmmirror.com/shebang-command@2.0.0
       which: registry.npmmirror.com/which@2.0.2
+    dev: false
+
+  registry.npmmirror.com/crypt@0.0.2:
+    resolution: {integrity: sha512-mCxBlsHFYh9C+HVpiEacem8FEBnMXgU9gy4zmNC+SXAZNB/1idgp/aulFJ4FgCi7GPEVbfyng092GqL2k2rmow==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/crypt/-/crypt-0.0.2.tgz}
+    name: crypt
+    version: 0.0.2
     dev: false
 
   registry.npmmirror.com/css-select@5.1.0:
@@ -1386,6 +1412,12 @@ packages:
     version: 2.0.4
     dev: false
 
+  registry.npmmirror.com/is-buffer@1.1.6:
+    resolution: {integrity: sha512-NcdALwpXkTm5Zvvbk7owOUSvVvBKDgKP5/ewfXEznmQFfs4ZRmanOeKBTjRVjka3QFoN6XJ+9F3USqfHqTaU5w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/is-buffer/-/is-buffer-1.1.6.tgz}
+    name: is-buffer
+    version: 1.1.6
+    dev: false
+
   registry.npmmirror.com/is-stream@3.0.0:
     resolution: {integrity: sha512-LnQR4bZ9IADDRSkvpqMGvt/tEJWclzklNgSw48V5EAaAeDd6qGvN8ei6k5p0tvxSR171VmGyHuTiAOfxAbr8kA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/is-stream/-/is-stream-3.0.0.tgz}
     name: is-stream
@@ -1449,6 +1481,16 @@ packages:
       sax: registry.npmmirror.com/sax@1.1.6
       underscore: registry.npmmirror.com/underscore@1.13.6
       xmlbuilder: registry.npmmirror.com/xmlbuilder@10.1.1
+    dev: false
+
+  registry.npmmirror.com/md5@2.3.0:
+    resolution: {integrity: sha512-T1GITYmFaKuO91vxyoQMFETst+O71VUPEU3ze5GNzDm0OWdP8v1ziTaAEPUr/3kLsY3Sftgz242A1SetQiDL7g==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/md5/-/md5-2.3.0.tgz}
+    name: md5
+    version: 2.3.0
+    dependencies:
+      charenc: registry.npmmirror.com/charenc@0.0.2
+      crypt: registry.npmmirror.com/crypt@0.0.2
+      is-buffer: registry.npmmirror.com/is-buffer@1.1.6
     dev: false
 
   registry.npmmirror.com/media-typer@0.3.0:

@@ -5,11 +5,9 @@ import { URL } from 'url'
 import { Document } from 'langchain/document'
 import { PlaywrightWebBaseLoader } from 'langchain/document_loaders/web/playwright'
 import { GithubRepoLoader } from 'langchain/document_loaders/web/github'
-import { mdSpitter } from './splitter.js'
 import { UnstructuredLoader } from 'langchain/document_loaders/fs/unstructured'
 import { fileSplitter } from './splitter.js'
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter'
-
 import 'dotenv/config.js'
 
 export const webLoader = async (url) => {
@@ -71,20 +69,12 @@ export const filesLoader = async (filesPath) => {
       let rawDocs
 
       switch (fileType) {
-        case '.docx':
-          rawDocs = await markdownLoader(filesPath, file)
-          break
-
-        case '.md':
-          rawDocs = await markdownLoader(filesPath, file)
-          break
-
         case '.html':
           rawDocs = await htmlLoader(filePath, filename)
           break
 
         default:
-          rawDocs = await defaultLoader(filePath, filename)
+          rawDocs = await defaultLoader(filePath, filename, fileType)
           break
       }
 
@@ -96,25 +86,13 @@ export const filesLoader = async (filesPath) => {
   return docs
 }
 
-const markdownLoader = async (filesPath, file) => {
-  const filePath = path.join(filesPath, file)
-  const fileContentBuffer = await fsPromise.readFile(filePath)
-  const fileContent = fileContentBuffer.toString('utf-8')
-  const rawDocs = await mdSpitter(fileContent, file)
-
-  return rawDocs
-}
-
 const htmlLoader = async (filePath, filename) => {
   const rawText = fs.readFileSync(filePath, 'utf-8')
-
   const splitter = new RecursiveCharacterTextSplitter({
-    chunkSize: 1000,
+    chunkSize: 1300,
     chunkOverlap: 0,
   })
-
   const rawName = path.basename(filename, '.html')
-
   const rawDocs = await splitter.createDocuments(
     [rawText],
     [
@@ -127,9 +105,8 @@ const htmlLoader = async (filePath, filename) => {
   return rawDocs
 }
 
-const defaultLoader = async (filePath, filename) => {
+const defaultLoader = async (filePath, filename, fileType) => {
   const loader = new UnstructuredLoader(filePath)
-
   let rawDocs = await loader.load()
 
   let temp
@@ -137,12 +114,12 @@ const defaultLoader = async (filePath, filename) => {
     temp += doc.pageContent
   })
 
+  const rawName = path.basename(filename, fileType)
   const fallDoc = new Document({
     pageContent: temp,
-    metadata: { filename: filename },
+    metadata: { filename: rawName },
   })
 
-  rawDocs = await fileSplitter([fallDoc])
-
+  rawDocs = await fileSplitter([fallDoc], 1000)
   return rawDocs
 }
