@@ -27,19 +27,13 @@ export const chatImage = async (ctx) => {
   const question = await translator(message, 'zh', 'en')
   const buffer = await fs.promises.readFile(FILE_PATH)
 
-  try {
-    const response = await hf.visualQuestionAnswering({
-      model: 'dandelin/vilt-b32-finetuned-vqa',
-      inputs: {
-        question: 'How many cats are lying down?',
-        image: await (await fetch('https://placekitten.com/300/300')).blob(),
-      },
-    })
-
-    console.log(response)
-  } catch (err) {
-    console.log(err)
-  }
+  const response = await hf.visualQuestionAnswering({
+    model: 'dandelin/vilt-b32-finetuned-vqa',
+    inputs: {
+      question: question,
+      image: buffer.buffer,
+    },
+  })
 
   const answer = await translator(response.answer, 'en', 'zh')
   return {
