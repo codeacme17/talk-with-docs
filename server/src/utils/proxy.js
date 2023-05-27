@@ -1,8 +1,6 @@
 import { SocksProxyAgent } from 'socks-proxy-agent'
 import 'dotenv/config'
 
-console.log(process.env)
-
 let options = {}
 
 if (process.env.SOCKS5_PROXY_ADDRESS) {

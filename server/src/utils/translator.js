@@ -1,11 +1,13 @@
-import 'dotenv/config'
 import md5 from 'md5'
+import 'dotenv/config'
 
 export default async function translator(text, from = 'auto', to) {
+  if (!process.env.BAIDU_APP_ID || !process.env.BAIDU_API_KEY) return text
+
   const url = `http://api.fanyi.baidu.com/api/trans/vip/translate`
   const salt = '1435660288'
-  const BAIDU_APP_ID = '20230525001689481'
-  const BAIDU_API_KEY = 'WIxI9X2a5Vsq93AU2yfg'
+  const BAIDU_APP_ID = process.env.BAIDU_APP_ID
+  const BAIDU_API_KEY = process.env.BAIDU_API_KEY
   const mes = BAIDU_APP_ID + text + salt + BAIDU_API_KEY
   const sign = md5(mes)
 

@@ -13,8 +13,6 @@ export const initFiles = async (ctx, files) => {
   const dirPathUrl = fileURLToPath(new URL(dirPath, import.meta.url))
   await Promise.all(files.map((file) => saveFile(namespace, file)))
   const docs = await filesLoader(dirPathUrl)
-
-  return
   await init_db({ docs, textKey: 'text', namespace })
 }
 

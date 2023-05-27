@@ -12,20 +12,12 @@ import {
   CHAT_AI_PROMPT,
   CHAT_SYSTEM_PROMPT,
 } from '../../constants/templates.js'
+import { openaiModel } from './openai-model.js'
 
 export const chatModel = async (ctx) => {
   const { prompt, history } = ctx
 
-  const chat = new ChatOpenAI(
-    {
-      temperature: 0.9,
-      streaming: false,
-      modelName: 'gpt-3.5-turbo',
-    },
-    {
-      baseOptions: options,
-    }
-  )
+  const chat = openaiModel(3.5)
 
   const translationPrompt = ChatPromptTemplate.fromPromptMessages([
     SystemMessagePromptTemplate.fromTemplate(CHAT_SYSTEM_PROMPT),
