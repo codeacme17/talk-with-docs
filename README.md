@@ -62,15 +62,15 @@ SOCKS5_PROXY_ADDRESS="socks5://..."
 ```
 
 ## Support type
-|       | type | suffix |    |
+|       | type | suffix |  describe  |
 |-------|------|------|--|
 |   ☑️   |word  |  `.doc` `.docx`    |  only `.docx` files support in-document image parsing  | 
 |   ☑️   |pdf  |  `.pdf`    |  not support  image parsing  | 
 |   ☑️   |HTML  |  `.html`  |  support  image parsing  | 
 |   ☑️   |image  |  `.png` `.jpg` `.webp`    |    | 
 |   ☑️   |web  |     | just use `url`   | 
-|   📌   |audio  |  `pending dev...`    |    | 
-|   📌   |video  |  `pending dev...`    |    | 
+|   📌   |audio  |      |  `pending dev...`  | 
+|   📌   |video  |  |  `pending dev...`      | 
 
 
 ## How it work
