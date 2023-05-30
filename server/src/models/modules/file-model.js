@@ -1,6 +1,5 @@
 import { fileURLToPath, URL } from 'url'
 import { ConversationalRetrievalQAChain } from 'langchain/chains'
-
 import saveFile from '../../utils/save-file.js'
 import { openaiModel } from './openai-model.js'
 import { filesLoader } from '../../utils/loaders.js'

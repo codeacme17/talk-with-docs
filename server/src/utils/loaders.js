@@ -82,7 +82,7 @@ export const filesLoader = async (filesPath) => {
     })
   )
 
-  console.log(docs.length)
+  console.log(docs.length, 'init docs')
   return docs
 }
 
@@ -107,9 +107,10 @@ const htmlLoader = async (filePath, filename) => {
 
 const defaultLoader = async (filePath, filename, fileType) => {
   const loader = new UnstructuredLoader(filePath)
-  let rawDocs = await loader.load()
 
-  let temp
+  let rawDocs = await loader.load()
+  let temp = ''
+
   rawDocs.forEach((doc) => {
     temp += doc.pageContent
   })

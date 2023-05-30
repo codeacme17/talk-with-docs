@@ -1,5 +1,4 @@
 import { ConversationalRetrievalQAChain } from 'langchain/chains'
-
 import { openaiModel } from './openai-model.js'
 import { webLoader } from '../../utils/loaders.js'
 import { WEB_CONDENSE_PROMPT, QA_PROMPT } from '../../constants/templates.js'

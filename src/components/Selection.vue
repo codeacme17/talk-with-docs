@@ -138,7 +138,6 @@ const selectLoader = async () => {
         const _formData = new FormData()
         formData.files.forEach((file, index) => {
           const encodedFileName = encodeURIComponent(file.name as string)
-          console.log(encodedFileName)
           _formData.append('files', file.raw!, encodedFileName)
         })
         _formData.append('namespace', formData.namespace!)

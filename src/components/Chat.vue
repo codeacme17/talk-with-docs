@@ -194,10 +194,10 @@ const reciveMessage = async () => {
   })
 
   const res = await fetchRobotMessage()
-
+  const content = res.text.replace(/\。$/, '')
   if (messageHitory.length > 5) messageHitory.shift()
-  messageHitory.push([historyChatMessage, res.text])
-  chatList[chatList.length - 1].content = toMarkdown(res.text)
+  messageHitory.push([historyChatMessage, content])
+  chatList[chatList.length - 1].content = toMarkdown(content)
   chatList[chatList.length - 1].loading = false
   chatList[chatList.length - 1].sources = res.sourceDocuments
   scrollToBottom()
